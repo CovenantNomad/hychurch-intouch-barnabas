@@ -122,7 +122,7 @@ export function SignIn({
 
               {/* 회원가입 버튼 */}
               <Button type="submit" className="w-full">
-                Sign Up
+                Login
               </Button>
             </form>
           </Form>
