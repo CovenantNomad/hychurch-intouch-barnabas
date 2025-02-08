@@ -12,7 +12,7 @@ const CourseInfomation = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center pt-4 px-6">
+      <div className="flex justify-between items-center">
         <h4 className="font-medium">바나바 과정</h4>
         {selectedMatching ? (
           <div
@@ -36,7 +36,7 @@ const CourseInfomation = () => {
         {selectedMatching ? (
           <>
             <div className="">
-              <div className="relative flex justify-center items-center space-x-2 px-6 py-4 mx-auto">
+              <div className="relative flex justify-center items-center space-x-2 py-4 mx-auto">
                 {/* Left Card */}
                 <BarnabaProfileCard barnabasId={selectedMatching.barnabaId} />
 
@@ -51,7 +51,7 @@ const CourseInfomation = () => {
                 <MenteeProfileCard menteeId={selectedMatching.menteeId} />
               </div>
             </div>
-            <div className="px-6 py-6 mt-2 mx-auto">
+            <div className="py-6 mt-2 mx-auto">
               <div className="border rounded-lg py-2">
                 <div className="flex justify-between space-x-6 pb-2 px-4 text-sm">
                   <div className="flex-1 flex justify-between">

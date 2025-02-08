@@ -24,8 +24,8 @@ const AppointmentDetail = () => {
 
   return (
     <div className="mt-6">
-      <h4 className="px-6 font-medium">세부일정</h4>
-      <div className="px-6 py-4 mx-auto">
+      <h4 className="font-medium">세부일정</h4>
+      <div className="py-4 mx-auto">
         {isLoading || isFetching ? (
           <Skeleton className="h-[200px] w-full" />
         ) : data && data.length !== 0 ? (

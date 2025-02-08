@@ -21,7 +21,7 @@ export default function Home() {
       : [];
 
   return (
-    <div className="min-h-svh">
+    <div className="relative min-h-svh">
       <Header
         left={<Header.ViewButton text="내 일정" path="/my-schedule" />}
         center={<div>CALENDAR</div>}

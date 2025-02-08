@@ -26,6 +26,11 @@ const DateTimePicker = ({ setIsOpen }: Props) => {
     setIsDateOpen(false);
   };
 
+  const handleMinuteSelect = (index: number) => {
+    setMinute((index * 5).toString());
+    setIsTimeOpen(false);
+  };
+
   return (
     <>
       <div className="border-b pr-4 py-2">
@@ -109,7 +114,7 @@ const DateTimePicker = ({ setIsOpen }: Props) => {
                   {Array.from({ length: 12 }).map((_, index) => (
                     <div key={index}>
                       <div
-                        onClick={() => setMinute((index * 5).toString())}
+                        onClick={() => handleMinuteSelect(index)}
                         className="text-sm cursor-pointer"
                       >
                         {(index * 5).toString().padStart(2, '0')}

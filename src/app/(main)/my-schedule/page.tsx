@@ -10,7 +10,7 @@ export default function MySchedulePage() {
     <>
       <Header
         left={<Header.ViewButton text="전체일정" path="/" />}
-        center={<div>MY SCHEDULE</div>}
+        center={<div className="text-center">MY SCHEDULE</div>}
         right={<MainDropdownMenu />}
       />
       <Container>
