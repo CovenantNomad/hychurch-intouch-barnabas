@@ -2,7 +2,7 @@
 
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
-import { MainDropdownMenu } from '@/components/common/Header/_components/MainDropdownMenu';
+import AddSchedule from '../home/_components/AddSchedule';
 import ScheduleList from './_components/ScheduleList';
 
 export default function MySchedulePage() {
@@ -11,7 +11,7 @@ export default function MySchedulePage() {
       <Header
         left={<Header.ViewButton text="전체일정" path="/" />}
         center={<div className="text-center">MY SCHEDULE</div>}
-        right={<MainDropdownMenu />}
+        right={<AddSchedule />}
       />
       <Container>
         <ScheduleList />
