@@ -25,11 +25,11 @@ const AddSchedule = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <div className="absolute bottom-24 right-6 bg-black p-3 rounded-full">
-          <PlusIcon className="h-6 w-6 text-white" />
-        </div>
+        <Button variant={'ghost'} className="p-2">
+          <PlusIcon className="h-6 w-6" />
+        </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] max-w-[96%] overflow-y-auto mx-auto px-4">
+      <DialogContent className="max-h-[95vh] max-w-[96%] overflow-y-auto mx-auto px-4">
         <DialogHeader>
           <DialogTitle>일정 등록</DialogTitle>
           <DialogDescription>멘티와의 만남을 등록해주세요</DialogDescription>

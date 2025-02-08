@@ -163,7 +163,12 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
               <h4 className="font-semibold">일정상태</h4>
               <Tooltip open={isTooltipOpen} onOpenChange={setIsTooltipOpen}>
                 <TooltipTrigger asChild>
-                  <span className="text-sm">(처음이라면 Hover해서 필독!)</span>
+                  <span
+                    className="text-sm"
+                    onClick={() => setIsTooltipOpen(true)}
+                  >
+                    (처음이라면 터치해서 필독!)
+                  </span>
                 </TooltipTrigger>
                 <TooltipContent className="bg-gray-900">
                   <p className="text-xs text-gray-200 mb-0.5">

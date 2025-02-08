@@ -1,7 +1,6 @@
 'use client';
 
 import Header from '@/components/common/Header';
-import { MainDropdownMenu } from '@/components/common/Header/_components/MainDropdownMenu';
 import MainCalendar from '@/components/common/MainCalendar';
 import { useMonthlyAppointments } from '@/hooks/useMonthlyAppointments';
 import { useDateStore } from '@/stores/dateStore';
@@ -25,11 +24,10 @@ export default function Home() {
       <Header
         left={<Header.ViewButton text="내 일정" path="/my-schedule" />}
         center={<div>CALENDAR</div>}
-        right={<MainDropdownMenu />}
+        right={<AddSchedule />}
       />
       <MainCalendar groupedAppointments={groupedAppointments} />
       <AppointmentList appointments={selectedAppointments} />
-      <AddSchedule />
     </div>
   );
 }
