@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useScheduleMutation } from '@/hooks/useScheduleMutation';
-import { getMatchingMessage } from '@/lib/utils';
+import { cn, getMatchingMessage } from '@/lib/utils';
 import { findProgressMentorships } from '@/repositories/barnabas';
 import { useAuthStore } from '@/stores/authState';
 import { useQuery } from '@tanstack/react-query';
@@ -15,7 +15,7 @@ type Props = {
 
 const CourseSelection = ({ setIsOpen }: Props) => {
   const { profile } = useAuthStore();
-  const { setSelectedCourse } = useScheduleMutation(setIsOpen);
+  const { selectedCourse, setSelectedCourse } = useScheduleMutation(setIsOpen);
 
   const { isLoading, isFetching, data } = useQuery({
     queryKey: ['findProgressMentorships', profile?.id],
@@ -39,7 +39,10 @@ const CourseSelection = ({ setIsOpen }: Props) => {
           data.map((course) => (
             <div
               key={course.id}
-              className="flex justify-between items-center border py-2 px-4 rounded-lg shadow-sm mb-2"
+              className={cn(
+                'flex justify-between items-center border py-2 px-4 rounded-lg shadow-sm mb-2',
+                selectedCourse?.id === course.id ? 'bg-gray-200' : ''
+              )}
             >
               <div>
                 <span className="inline-block">멘티: {course.menteeName}</span>

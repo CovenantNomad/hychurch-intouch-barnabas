@@ -14,8 +14,8 @@ const AppointmentList = ({ appointments }: Props) => {
   const sortedAppointments = groupAndSortDailyAppointments(appointments);
 
   return (
-    <>
-      <h4 className="px-8 pt-6 pb-4">
+    <div className="pt-6 pb-32">
+      <h4 className="px-6 pb-4">
         {dayjs(selectedDate)?.format('YYYY. MM. DD.')}{' '}
         <span className="inline-block ml-2 text-sm tracking-wide">
           {appointments.length !== 0 && `(전체일정: ${appointments.length}개)`}
@@ -25,12 +25,12 @@ const AppointmentList = ({ appointments }: Props) => {
         {appointments.length !== 0 ? (
           <AppointmentAccordion sortedAppointments={sortedAppointments} />
         ) : (
-          <div className="h-40 flex items-center justify-center px-8 py-4">
+          <div className="h-40 flex items-center justify-center px-6 py-4">
             <span className="text-lg font-semibold">일정 없음</span>
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
