@@ -148,10 +148,3 @@ export type TMenteeAttendance = {
   service: string;
   description?: string;
 };
-
-// export type TAttendanceSubmitStatus = {
-//   attendanceId: string;
-//   barnabaId: string;
-//   menteeId: string;
-//   date: string;
-// };
