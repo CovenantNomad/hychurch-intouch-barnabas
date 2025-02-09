@@ -1,12 +1,8 @@
+import { sectionHeaders } from '@/constants';
+
 type Props = {
   number: number;
   status: string;
-};
-
-const sectionHeaders: { [key: string]: string } = {
-  scheduled: '예정된 약속',
-  completed: '완료된 약속',
-  canceled: '취소된 약속',
 };
 
 const AppointmentAccordionHeader = ({ status, number }: Props) => {

@@ -1,8 +1,8 @@
 'use client';
 
+import AddSchedule from '@/components/common/AddSchedule';
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
-import AddSchedule from '../home/_components/AddSchedule';
 import ScheduleList from './_components/ScheduleList';
 
 export default function MySchedulePage() {

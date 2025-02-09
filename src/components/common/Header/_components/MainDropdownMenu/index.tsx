@@ -42,7 +42,7 @@ export function MainDropdownMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
+        <Button variant="ghost" className="-mr-2">
           <MenuIcon />
         </Button>
       </DropdownMenuTrigger>
