@@ -5,6 +5,7 @@ import {
   TBarnabasProfile,
   TMatching,
   TMatchingStatus,
+  TMenteeAttendance,
   TMenteeProfile,
 } from '@/types/barnabas.types';
 import dayjs from 'dayjs';
@@ -477,5 +478,56 @@ export const getBarnabasYearlyRecords = async (
   } catch (error) {
     console.error('@getBarnabasYearlyRecords:', error);
     throw new Error('데이터를 가져오는 데 실패했습니다.');
+  }
+};
+
+export const createMenteeAttendance = async (
+  inputData: TMenteeAttendance
+): Promise<TMenteeAttendance> => {
+  try {
+    const attendanceRef = doc(
+      db,
+      BARNABAS_COLLCTION.BARNABAS,
+      BARNABAS_COLLCTION.DATA,
+      BARNABAS_COLLCTION.ATTENDANCES,
+      BARNABAS_COLLCTION.DATE,
+      inputData.date,
+      inputData.menteeId
+    );
+
+    await setDoc(attendanceRef, inputData);
+
+    return inputData;
+  } catch (error) {
+    console.error('@createMenteeAttendance:', error);
+    throw new Error('멘티 출석 데이터를 제출하는 데 실패했습니다.');
+  }
+};
+
+export const checkAttendanceSubmit = async (
+  date: string,
+  menteeId: string
+): Promise<boolean> => {
+  try {
+    const attendanceRef = doc(
+      db,
+      BARNABAS_COLLCTION.BARNABAS,
+      BARNABAS_COLLCTION.DATA,
+      BARNABAS_COLLCTION.ATTENDANCES,
+      BARNABAS_COLLCTION.DATE,
+      date,
+      menteeId
+    );
+
+    const docSnap = await getDoc(attendanceRef);
+
+    if (docSnap.exists()) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('@checkAttendanceSubmit:', error);
+    throw new Error('멘티 예배출석 제출 여부를 조회하는데 실패했습니다.');
   }
 };

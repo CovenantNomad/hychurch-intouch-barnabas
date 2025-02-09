@@ -30,7 +30,7 @@ const ScheduleListItem = ({ appointment }: Props) => {
           </span>
         </div>
         <div className="flex items-center space-x-2">
-          <span>{appointment.menteeName} 멘티</span>
+          <span>{appointment.menteeName}</span>
           <span>
             ({appointment.week}주차 / {appointment.scheduledMeetingCount}주차)
           </span>

@@ -113,3 +113,15 @@ export const groupAndSortDailyAppointments = (appointments: TAppointment[]) => {
     canceled: sortAppointments(grouped.canceled),
   };
 };
+
+export const getClosestSunday = (): string => {
+  // 현재 날짜
+  const today = dayjs();
+
+  // 가장 가까운 일요일 계산
+  const closestSunday =
+    today.day() === 0 ? today : today.add(7 - today.day(), 'day');
+
+  // 'YYYY-MM-DD' 형식으로 반환
+  return closestSunday.format('YYYY-MM-DD');
+};

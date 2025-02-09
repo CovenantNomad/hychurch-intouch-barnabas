@@ -1,12 +1,12 @@
 'use client';
 
+import AddSchedule from '@/components/common/AddSchedule';
+import AppointmentList from '@/components/common/AppointmentList';
 import Header from '@/components/common/Header';
 import MainCalendar from '@/components/common/MainCalendar';
 import { useMonthlyAppointments } from '@/hooks/useMonthlyAppointments';
 import { useDateStore } from '@/stores/dateStore';
 import dayjs from 'dayjs';
-import AddSchedule from './home/_components/AddSchedule';
-import AppointmentList from './home/_components/AppointmentList';
 
 export default function Home() {
   const { selectedDate } = useDateStore();

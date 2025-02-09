@@ -41,7 +41,7 @@ const CourseSelection = ({ setIsOpen }: Props) => {
               key={course.id}
               className={cn(
                 'flex justify-between items-center border py-2 px-4 rounded-lg shadow-sm mb-2',
-                selectedCourse?.id === course.id ? 'bg-gray-200' : ''
+                selectedCourse?.id === course.id ? 'bg-teal-200' : ''
               )}
             >
               <div>

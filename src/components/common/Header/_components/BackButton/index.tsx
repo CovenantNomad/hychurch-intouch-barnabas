@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 const BackButton = () => {
   const router = useRouter();
   return (
-    <Button variant={'ghost'} onClick={() => router.back()}>
+    <Button variant={'ghost'} onClick={() => router.back()} className="-ml-4">
       <ChevronLeftIcon className="h-8 w-8" /> 뒤로
     </Button>
   );

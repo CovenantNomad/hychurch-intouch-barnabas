@@ -45,8 +45,9 @@ export enum BARNABAS_COLLCTION {
   BARNABAMENTORSHIPS = 'BarnabaMentorships',
   AMAZINGMENTORSHIPS = 'AmazingMentorships',
   MEETINGSCHEDULES = 'MeetingSchedules',
-  ATTENDANCES = 'Attendances',
   BARNABASDETAILS = 'barnabasDetails',
+  ATTENDANCES = 'Attendances',
+  DATE = 'Date',
 }
 
 export type TBarnabasProfile = {
@@ -137,3 +138,20 @@ export type TBarnabasHistory = {
   completedDate?: string; // 매칭 완료일 (ISO 8601 형식, 선택적)
   scheduledMeetingCount: string; // 예정된 만남 횟수
 };
+
+export type TMenteeAttendance = {
+  date: string;
+  barnabaId: string;
+  barnabaName: string;
+  menteeId: string;
+  menteeName: string;
+  service: string;
+  description?: string;
+};
+
+// export type TAttendanceSubmitStatus = {
+//   attendanceId: string;
+//   barnabaId: string;
+//   menteeId: string;
+//   date: string;
+// };
