@@ -11,7 +11,8 @@ import dayjs from 'dayjs';
 export default function Home() {
   const { selectedDate } = useDateStore();
   // 일정 데이터
-  const { groupedAppointments } = useMonthlyAppointments();
+  const { groupedAppointments, isLoading, isFetching } =
+    useMonthlyAppointments();
 
   const selectedAppointments =
     selectedDate &&
@@ -27,7 +28,11 @@ export default function Home() {
         right={<AddSchedule />}
       />
       <MainCalendar groupedAppointments={groupedAppointments} />
-      <AppointmentList appointments={selectedAppointments} />
+      <AppointmentList
+        appointments={selectedAppointments}
+        isLoading={isLoading}
+        isFetching={isFetching}
+      />
     </div>
   );
 }

@@ -17,12 +17,12 @@ const bgColors = [
   'bg-pink-500',
 ];
 
-const ColorBar = () => {
+const ColorBar = ({ index }: { index: number }) => {
   return (
     <div
       className={cn(
         'w-1 h-[50px] rounded-full mr-2',
-        bgColors[Math.floor(Math.random() * bgColors.length)]
+        bgColors[Math.floor(index * bgColors.length)]
       )}
     />
   );

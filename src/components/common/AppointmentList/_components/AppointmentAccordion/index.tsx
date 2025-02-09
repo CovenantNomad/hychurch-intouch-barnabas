@@ -47,10 +47,11 @@ const AppointmentAccordion = ({ sortedAppointments }: Props) => {
             <AccordionContent>
               <div className="divide-y divide-gray-100">
                 {appointments.length !== 0 ? (
-                  appointments.map((appointment) => (
+                  appointments.map((appointment, index) => (
                     <AppointmentListItem
                       key={appointment.appointmentId}
                       appointment={appointment}
+                      index={index}
                     />
                   ))
                 ) : (
