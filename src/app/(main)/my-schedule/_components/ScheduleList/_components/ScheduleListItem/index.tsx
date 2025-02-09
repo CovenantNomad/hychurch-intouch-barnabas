@@ -12,15 +12,16 @@ import { EditIcon } from 'lucide-react';
 
 type Props = {
   appointment: TAppointment;
+  index: number;
 };
 
-const ScheduleListItem = ({ appointment }: Props) => {
+const ScheduleListItem = ({ appointment, index }: Props) => {
   const { profile } = useAuthStore();
 
   return (
     <div className="flex items-center py-3 text-sm mt-2">
       {/* 컬러 바 표시 */}
-      <ColorBar />
+      <ColorBar index={index} />
 
       {/* 일정 정보 */}
       <div className="flex-1">
