@@ -118,9 +118,11 @@ export const getClosestSunday = (): string => {
   // 현재 날짜
   const today = dayjs();
 
-  // 가장 가까운 일요일 계산
-  const closestSunday =
-    today.day() === 0 ? today : today.add(7 - today.day(), 'day');
+  // 현재 요일 (0 = 일요일, 1 = 월요일, ..., 6 = 토요일)
+  const dayOfWeek = today.day();
+
+  // 이번 주 일요일 찾기 (현재 요일에서 dayOfWeek 만큼 빼기)
+  const closestSunday = today.subtract(dayOfWeek, 'day');
 
   // 'YYYY-MM-DD' 형식으로 반환
   return closestSunday.format('YYYY-MM-DD');
