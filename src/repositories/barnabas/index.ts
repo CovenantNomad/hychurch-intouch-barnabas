@@ -393,9 +393,7 @@ export const getBarnabasRecords = async (profileId: string) => {
 
     const q = query(
       thisYearHistoryRef,
-      where('status', '>=', TMatchingStatus.COMPLETED),
-      where('completedDate', '>=', `${currentYear}-01-01`),
-      where('completedDate', '<=', `${currentYear}-12-31`)
+      where('status', 'in', [TMatchingStatus.COMPLETED, TMatchingStatus.FAILED])
     );
 
     const [docSnap, querySnapshot] = await Promise.all([
@@ -403,12 +401,19 @@ export const getBarnabasRecords = async (profileId: string) => {
       getDocs(q),
     ]);
 
+    const filteredDocs = querySnapshot.docs.filter((doc) => {
+      const data = doc.data();
+      return (
+        data.completedDate >= `${currentYear}-01-01` &&
+        data.completedDate <= `${currentYear}-12-31`
+      );
+    });
+
     // pass와 fail 분류
     let thisYearpass = 0;
-
-    querySnapshot.forEach((doc) => {
+    filteredDocs.forEach((doc) => {
       const data = doc.data();
-      if (data.status === 'completed') {
+      if (data.status === TMatchingStatus.COMPLETED) {
         thisYearpass++;
       }
     });

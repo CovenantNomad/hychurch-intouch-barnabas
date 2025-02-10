@@ -1,19 +1,20 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { findProgressMentorships } from '@/repositories/barnabas';
 import { useAuthStore } from '@/stores/authState';
 import { TMatchingStatus } from '@/types/barnabas.types';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useQuery } from '@tanstack/react-query';
-import { MessageSquareXIcon } from 'lucide-react';
+import { MessageSquareXIcon, RotateCcwIcon } from 'lucide-react';
 import PendingCard from './_components/PendingCard';
 import ProgressCard from './_components/ProgressCard';
 
 const BarnabasOverviews = () => {
   const { profile } = useAuthStore();
 
-  const { isLoading, isFetching, data } = useQuery({
+  const { isLoading, data, refetch } = useQuery({
     queryKey: ['findProgressMentorships', profile?.id],
     queryFn: () =>
       profile ? findProgressMentorships(profile.id) : Promise.resolve([]),
@@ -25,9 +26,14 @@ const BarnabasOverviews = () => {
   return (
     <>
       <div className="flex justify-between items-end">
-        <h3 className="text-[22px] font-semibold tracking-tight">
-          {profile ? `${profile.name} 바나바님` : '로그인 필요'}
-        </h3>
+        <div className="flex items-center space-x-2">
+          <h3 className="text-[22px] font-semibold tracking-tight">
+            {profile ? `${profile.name} 바나바님` : '로그인 필요'}
+          </h3>
+          <Button size={'sm'} variant={'ghost'} onClick={() => refetch()}>
+            <RotateCcwIcon />
+          </Button>
+        </div>
         <p className="underline text-base">현재진행 : {data?.length || 0}명</p>
       </div>
       <div className="mt-10">
@@ -38,7 +44,7 @@ const BarnabasOverviews = () => {
           </p>
           <div className="border-b border-gray-200 mt-5" />
           <div>
-            {isLoading || isFetching ? (
+            {isLoading ? (
               <Skeleton className="h-[400px] w-[280px] rounded-lg" />
             ) : data &&
               data.length !== 0 &&
@@ -73,7 +79,7 @@ const BarnabasOverviews = () => {
           </p>
           <div className="border-b border-gray-200 mt-5" />
           <div>
-            {isLoading || isFetching ? (
+            {isLoading ? (
               <Skeleton className="h-[400px] w-[280px] rounded-lg" />
             ) : data &&
               data.length !== 0 &&

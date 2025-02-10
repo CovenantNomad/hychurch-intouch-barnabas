@@ -122,7 +122,7 @@ const CheckAttendance = () => {
             멘티들의 이번주 예배 출석을 제출해주세요
           </DialogDescription>
         </DialogHeader>
-        {isLoading || isFetching ? (
+        {isLoading ? (
           <div className="h-[100px] flex justify-center items-center text-center p-6 border text-sm rounded-lg">
             <span className="animate-pulse">출석체크 제출 여부 체크 중...</span>
           </div>

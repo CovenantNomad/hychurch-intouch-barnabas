@@ -386,17 +386,19 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
               </div>
             </div>
           </div>
-          <div className="mt-4">
-            <h4 className="font-semibold mb-1">만남후기 작성</h4>
-            <Textarea
-              rows={5}
-              placeholder="후기를 입력해 주세요."
-              value={updatedAppointment.review}
-              onChange={handleReviewChange}
-            />
-          </div>
+          {updatedAppointment.status !== AppointmentStatus.SCHEDULED && (
+            <div className="mt-4">
+              <h4 className="font-semibold mb-1">만남후기 작성</h4>
+              <Textarea
+                rows={5}
+                placeholder="후기를 입력해 주세요."
+                value={updatedAppointment.review}
+                onChange={handleReviewChange}
+              />
+            </div>
+          )}
         </div>
-        <DialogFooter>
+        <DialogFooter className="mt-2">
           <Button type="submit" onClick={handleSaveChanges}>
             저장하기
           </Button>
