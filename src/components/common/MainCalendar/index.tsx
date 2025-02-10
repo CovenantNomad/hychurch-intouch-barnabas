@@ -3,16 +3,20 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useDateStore } from '@/stores/dateStore';
-import { TGroupedAppointments } from '@/types/barnabas.types';
+import { TAppointment, TGroupedAppointments } from '@/types/barnabas.types';
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import dayjs, { Dayjs } from 'dayjs';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { CalendarSyncIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo } from 'react';
 
 type Props = {
   groupedAppointments: TGroupedAppointments;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<TAppointment[], Error>>;
 };
 
-export default function MainCalendar({ groupedAppointments }: Props) {
+export default function MainCalendar({ groupedAppointments, refetch }: Props) {
   const { currentDate, selectedDate, setCurrentDate, setSelectedDate } =
     useDateStore();
   // 날짜 배열 생성 (useMemo로 최적화)
@@ -38,24 +42,31 @@ export default function MainCalendar({ groupedAppointments }: Props) {
   return (
     <div className="mx-auto mt-6">
       {/* 상단 네비게이션 */}
-      <div className="flex items-center justify-between mb-5 px-6">
-        <Button
-          onClick={handlePrevMonth}
-          variant={'outline'}
-          className="w-7 h-7 p-0"
-        >
-          <ChevronLeft size={20} />
-        </Button>
-        <div className="text-base font-medium">
-          {dayjs(currentDate).format('YYYY년 M월')}
+      <div className="relative flex justify-center mb-5 px-6 ">
+        <div className="absolute left-8 -top-1">
+          <Button variant={'ghost'} onClick={() => refetch()} className="-ml-6">
+            <CalendarSyncIcon className="h-6 w-6" />
+          </Button>
         </div>
-        <Button
-          onClick={handleNextMonth}
-          variant={'outline'}
-          className="w-7 h-7 p-0"
-        >
-          <ChevronRight size={20} />
-        </Button>
+        <div className="flex items-center space-x-8">
+          <Button
+            onClick={handlePrevMonth}
+            variant={'outline'}
+            className="w-7 h-7 p-0"
+          >
+            <ChevronLeft size={20} />
+          </Button>
+          <div className="text-base font-medium">
+            {dayjs(currentDate).format('YYYY년 M월')}
+          </div>
+          <Button
+            onClick={handleNextMonth}
+            variant={'outline'}
+            className="w-7 h-7 p-0"
+          >
+            <ChevronRight size={20} />
+          </Button>
+        </div>
       </div>
 
       <div className="flex justify-end space-x-4 px-6 mb-1 text-xs">

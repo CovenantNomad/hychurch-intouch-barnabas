@@ -16,6 +16,7 @@ export function useMonthlyAppointments() {
     data: appointments = [],
     isLoading,
     isFetching,
+    refetch,
   } = useQuery<TAppointment[]>({
     queryKey: ['monthlyAppointments', dayjs(currentDate).format('YYYY-MM')],
     queryFn: () =>
@@ -50,5 +51,5 @@ export function useMonthlyAppointments() {
     return grouped;
   }, [appointments]);
 
-  return { groupedAppointments, isLoading, isFetching };
+  return { isLoading, isFetching, groupedAppointments, refetch };
 }

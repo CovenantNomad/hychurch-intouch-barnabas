@@ -8,14 +8,19 @@ import { useAuthStore } from '@/stores/authState';
 import { TMatchingStatus } from '@/types/barnabas.types';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { ChevronLeft, ChevronRight, MessageSquareXIcon } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  MessageSquareXIcon,
+  RotateCcwIcon,
+} from 'lucide-react';
 import { useState } from 'react';
 
 const BarnabasYearlyRecords = () => {
   const [currentYear, setCurrentYear] = useState(dayjs().year());
   const { profile } = useAuthStore();
 
-  const { isLoading, isFetching, data } = useQuery({
+  const { isLoading, isFetching, data, refetch } = useQuery({
     queryKey: ['getBarnabasYearlyRecords', profile?.id, currentYear],
     queryFn: () => getBarnabasYearlyRecords(profile!.id, currentYear),
     staleTime: 5 * 60 * 1000,
@@ -39,9 +44,19 @@ const BarnabasYearlyRecords = () => {
 
   return (
     <div className="mt-12">
-      <h3 className="border-b pb-1 mb-4 text-lg font-semibold">
-        연도별 히스토리
-      </h3>
+      <div className="flex justify-between items-center border-b pb-1 mb-4">
+        <h3 className="text-lg font-semibold">연도별 히스토리</h3>
+        <div className="flex items-center space-x-2">
+          {isFetching && (
+            <span className="animate-pulse text-xs text-gray-400">
+              새로고침중...
+            </span>
+          )}
+          <Button variant={'ghost'} onClick={() => refetch()}>
+            <RotateCcwIcon className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
       <div>
         <div className="flex items-center justify-center space-x-8 my-8">
           <Button
@@ -63,7 +78,7 @@ const BarnabasYearlyRecords = () => {
           </Button>
         </div>
         <div className="border-y divide-y">
-          {isLoading || isFetching ? (
+          {isLoading ? (
             <Skeleton className="h-[56px] my-4" />
           ) : data && data.length !== 0 ? (
             data

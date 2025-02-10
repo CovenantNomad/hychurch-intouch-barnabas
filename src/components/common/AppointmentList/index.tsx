@@ -18,14 +18,22 @@ const AppointmentList = ({ appointments, isLoading, isFetching }: Props) => {
 
   return (
     <div className="pt-6 pb-32">
-      <h4 className="px-6 pb-4">
-        {dayjs(selectedDate)?.format('YYYY. MM. DD.')}{' '}
-        <span className="inline-block ml-2 text-sm tracking-wide">
-          {appointments.length !== 0 && `(전체일정: ${appointments.length}개)`}
-        </span>
-      </h4>
+      <div className="flex justify-between px-6 pb-4">
+        <h4 className="">
+          {dayjs(selectedDate)?.format('YYYY. MM. DD.')}{' '}
+          <span className="inline-block ml-2 text-sm tracking-wide">
+            {appointments.length !== 0 &&
+              `(전체일정: ${appointments.length}개)`}
+          </span>
+        </h4>
+        {isFetching && (
+          <span className="animate-pulse inline-block text-sm">
+            새로고침중..
+          </span>
+        )}
+      </div>
       <div>
-        {isLoading || isFetching ? (
+        {isLoading ? (
           <div className="px-6 space-y-6">
             <Skeleton className="w-full h-7 pt-4 pb-1" />
             <Skeleton className="w-full h-7 pt-4 pb-1" />
