@@ -7,7 +7,7 @@ import UpdateAppointment from '@/components/common/UpdateAppointment';
 import { Button } from '@/components/ui/button';
 import { getDayOfWeek } from '@/lib/utils';
 import { useAuthStore } from '@/stores/authState';
-import { TAppointment } from '@/types/barnabas.types';
+import { TAppointment, TMatchingStatus } from '@/types/barnabas.types';
 import { EditIcon } from 'lucide-react';
 
 type Props = {
@@ -33,7 +33,11 @@ const ScheduleListItem = ({ appointment, index }: Props) => {
         <div className="flex items-center space-x-2">
           <span>{appointment.menteeName}</span>
           <span>
-            ({appointment.week}주차 / {appointment.scheduledMeetingCount}주차)
+            {appointment.matchingStatus === TMatchingStatus.COMPLETED
+              ? `(${appointment.week}주차 / ${appointment.scheduledMeetingCount}주차, 과정수료)`
+              : appointment.matchingStatus === TMatchingStatus.FAILED
+              ? `(${appointment.week}주차 / ${appointment.scheduledMeetingCount}주차, 과정보류)`
+              : `(${appointment.week}주차 / ${appointment.scheduledMeetingCount}주차)`}
           </span>
         </div>
       </div>
@@ -43,18 +47,20 @@ const ScheduleListItem = ({ appointment, index }: Props) => {
         <TimeDisplay hour={appointment.hour} minute={appointment.minute} />
         <LocationDisplay place={appointment.place} />
       </div>
-      {profile?.id === appointment.barnabaId && (
-        <div className="ml-4">
-          <UpdateAppointment
-            appointment={appointment}
-            triggerComponent={
-              <Button variant={'outline'}>
-                <EditIcon />
-              </Button>
-            }
-          />
-        </div>
-      )}
+      {profile?.id === appointment.barnabaId &&
+        appointment.matchingStatus !== TMatchingStatus.COMPLETED &&
+        appointment.matchingStatus !== TMatchingStatus.FAILED && (
+          <div className="ml-4">
+            <UpdateAppointment
+              appointment={appointment}
+              triggerComponent={
+                <Button variant={'outline'}>
+                  <EditIcon />
+                </Button>
+              }
+            />
+          </div>
+        )}
     </div>
   );
 };

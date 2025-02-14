@@ -60,9 +60,11 @@ export function MainDropdownMenu() {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => router.push('/barnabas')}>
-            바나바과정
+            바나바 과정
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => router.push('/attendance')}>
+            멘티 출석체크
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => router.push('/profile')}>
             마이페이지
           </DropdownMenuItem>

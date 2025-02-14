@@ -6,7 +6,7 @@ import ColorBar from '@/components/common/ColorBar';
 import UpdateAppointment from '@/components/common/UpdateAppointment';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/stores/authState';
-import { TAppointment } from '@/types/barnabas.types';
+import { TAppointment, TMatchingStatus } from '@/types/barnabas.types';
 import { EditIcon } from 'lucide-react';
 
 type Props = {
@@ -39,18 +39,20 @@ const AppointmentListItem = ({ appointment, index }: Props) => {
         <TimeDisplay hour={appointment.hour} minute={appointment.minute} />
         <LocationDisplay place={appointment.place} />
       </div>
-      {profile?.id === appointment.barnabaId && (
-        <div className="ml-4">
-          <UpdateAppointment
-            appointment={appointment}
-            triggerComponent={
-              <Button variant={'outline'}>
-                <EditIcon />
-              </Button>
-            }
-          />
-        </div>
-      )}
+      {profile?.id === appointment.barnabaId &&
+        appointment.matchingStatus !== TMatchingStatus.COMPLETED &&
+        appointment.matchingStatus !== TMatchingStatus.FAILED && (
+          <div className="ml-4">
+            <UpdateAppointment
+              appointment={appointment}
+              triggerComponent={
+                <Button variant={'outline'}>
+                  <EditIcon />
+                </Button>
+              }
+            />
+          </div>
+        )}
     </div>
   );
 };

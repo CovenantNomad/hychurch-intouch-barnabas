@@ -2,7 +2,6 @@
 
 import { ReactNode } from 'react';
 import BackButton from './_components/BackButton';
-import ViewButton from './_components/ViewButton';
 
 type Props = {
   left?: ReactNode;
@@ -17,7 +16,7 @@ const Header = ({ left, center, right }: Props) => {
       <div className="flex-1 flex justify-start items-center">{left}</div>
 
       {/* 중앙 섹션 */}
-      <div className="flex-1 flex justify-center items-center px-4">
+      <div className="flex-1 flex justify-center items-center mx-4">
         {center}
       </div>
 
@@ -28,6 +27,5 @@ const Header = ({ left, center, right }: Props) => {
 };
 
 Header.BackButton = BackButton;
-Header.ViewButton = ViewButton;
 
 export default Header;

@@ -99,7 +99,7 @@ export enum AppointmentStatus {
 
 export type TAppointment = {
   appointmentId: string;
-  matchingId: string; // 매칭 ID
+  matchingId: string; // 과정 ID
   barnabaId: string; // 바나바 ID
   menteeId: string; // 멘티 ID
   barnabaName: string;
@@ -112,6 +112,7 @@ export type TAppointment = {
   scheduledMeetingCount: string;
   review: string;
   status: AppointmentStatus;
+  matchingStatus: TMatchingStatus; //과정 상태
 };
 
 export type TGroupedAppointments = {

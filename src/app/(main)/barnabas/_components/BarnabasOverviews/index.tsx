@@ -75,7 +75,7 @@ const BarnabasOverviews = () => {
             지연중인 과정
           </h4>
           <p className="text-sm text-gray-500 mt-1">
-            바나바 과정을 잠시 지연되고 있습니다. 기도해주세요 🙏🏻
+            바나바 과정이 잠시 지연되고 있습니다. 기도해주세요 🙏🏻
           </p>
           <div className="border-b border-gray-200 mt-5" />
           <div>

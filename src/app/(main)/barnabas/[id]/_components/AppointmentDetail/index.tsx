@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getAppointmentDetails } from '@/repositories/barnabas';
 import { useMatchingStore } from '@/stores/matchingState';
-import { AppointmentStatus } from '@/types/barnabas.types';
 import { useQuery } from '@tanstack/react-query';
 import { MessageSquareXIcon, RotateCcwIcon } from 'lucide-react';
 
@@ -65,14 +64,7 @@ const AppointmentDetail = () => {
                   <UpdateAppointment
                     appointment={appointment}
                     triggerComponent={
-                      <Button
-                        className="rounded-full"
-                        disabled={
-                          appointment.status === AppointmentStatus.COMPLETED
-                        }
-                      >
-                        자세히 보기
-                      </Button>
+                      <Button className="rounded-full">자세히 보기</Button>
                     }
                   />
                 </div>

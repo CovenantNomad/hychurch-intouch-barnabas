@@ -25,8 +25,8 @@ const AddSchedule = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant={'ghost'} className="p-2">
-          <PlusIcon className="h-6 w-6" />
+        <Button variant={'ghost'} className="-ml-4">
+          <PlusIcon />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[95vh] max-w-[96%] overflow-y-auto mx-auto px-4">

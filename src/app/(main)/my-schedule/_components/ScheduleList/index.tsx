@@ -1,5 +1,6 @@
 'use client';
 
+import ViewButton from '@/components/common/ViewButton';
 import { Button } from '@/components/ui/button';
 import { groupAndSortDailyAppointments } from '@/lib/utils';
 import { useAppointmentStore } from '@/stores/appointmentState';
@@ -40,7 +41,12 @@ const ScheduleList = () => {
 
   return (
     <>
-      <h2 className="text-lg font-semibold">월별 만남 일정</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-semibold">월별 만남 일정</h2>
+        <div>
+          <ViewButton />
+        </div>
+      </div>
       <div className="flex items-center justify-between mt-8 mb-6">
         <Button
           onClick={handlePrevMonth}

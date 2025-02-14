@@ -6,8 +6,9 @@ import { useDateStore } from '@/stores/dateStore';
 import { TAppointment, TGroupedAppointments } from '@/types/barnabas.types';
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import dayjs, { Dayjs } from 'dayjs';
-import { CalendarSyncIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo } from 'react';
+import ViewButton from '../ViewButton';
 
 type Props = {
   groupedAppointments: TGroupedAppointments;
@@ -42,12 +43,7 @@ export default function MainCalendar({ groupedAppointments, refetch }: Props) {
   return (
     <div className="mx-auto mt-6">
       {/* 상단 네비게이션 */}
-      <div className="relative flex justify-center mb-5 px-6 ">
-        <div className="absolute left-8 -top-1">
-          <Button variant={'ghost'} onClick={() => refetch()} className="-ml-6">
-            <CalendarSyncIcon className="h-6 w-6" />
-          </Button>
-        </div>
+      <div className="relative flex justify-center mb-6 px-6 ">
         <div className="flex items-center space-x-8">
           <Button
             onClick={handlePrevMonth}
@@ -66,6 +62,9 @@ export default function MainCalendar({ groupedAppointments, refetch }: Props) {
           >
             <ChevronRight size={20} />
           </Button>
+        </div>
+        <div className="absolute right-6 -top-1">
+          <ViewButton refetch={refetch} />
         </div>
       </div>
 
