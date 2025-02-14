@@ -7,7 +7,7 @@ export const TimeDisplay = ({
   hour: string;
   minute: string;
 }) => (
-  <div className="flex items-center space-x-2">
+  <div className="flex justify-end items-center space-x-2">
     <Clock3Icon className="h-4 w-4" />
     <span className="text-sm">
       {hour}:{minute}
