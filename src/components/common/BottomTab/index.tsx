@@ -14,9 +14,9 @@ const BottomTab = () => {
             <span className="text-sm">캘린더</span>
           </li>
         </Link>
-        <Link href={'/profile'} className="w-full cursor-pointer">
+        <Link href={'/attendance'} className="w-full cursor-pointer">
           <li className="flex flex-col items-center space-y-1">
-            <span className="text-sm">마이페이지</span>
+            <span className="text-sm">출석체크</span>
           </li>
         </Link>
       </ul>

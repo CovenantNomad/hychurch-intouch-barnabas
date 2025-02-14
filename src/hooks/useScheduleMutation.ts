@@ -110,7 +110,7 @@ export function useScheduleMutation(
       return showToast('제출실패', '바나바 과정을 선택해주세요.');
     if (isDuplicateAppointment(userAppointments, selectedCourse)) return;
 
-    const submissionData = {
+    const submissionData: Omit<TAppointment, 'appointmentId'> = {
       matchingId: selectedCourse.id,
       barnabaId: selectedCourse.barnabaId,
       menteeId: selectedCourse.menteeId,
@@ -124,6 +124,7 @@ export function useScheduleMutation(
       scheduledMeetingCount: selectedCourse.scheduledMeetingCount,
       review: '',
       status: AppointmentStatus.SCHEDULED,
+      matchingStatus: selectedCourse.status,
     };
 
     mutation.mutate(submissionData);

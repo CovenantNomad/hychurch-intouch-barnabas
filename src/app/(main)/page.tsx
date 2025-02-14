@@ -3,6 +3,7 @@
 import AddSchedule from '@/components/common/AddSchedule';
 import AppointmentList from '@/components/common/AppointmentList';
 import Header from '@/components/common/Header';
+import { MainDropdownMenu } from '@/components/common/Header/_components/MainDropdownMenu';
 import MainCalendar from '@/components/common/MainCalendar';
 import { useMonthlyAppointments } from '@/hooks/useMonthlyAppointments';
 import { useDateStore } from '@/stores/dateStore';
@@ -23,9 +24,9 @@ export default function Home() {
   return (
     <div className="relative min-h-svh">
       <Header
-        left={<Header.ViewButton text="내 일정" path="/my-schedule" />}
+        left={<AddSchedule />}
         center={<div>CALENDAR</div>}
-        right={<AddSchedule />}
+        right={<MainDropdownMenu />}
       />
       <MainCalendar
         groupedAppointments={groupedAppointments}

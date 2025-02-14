@@ -158,242 +158,253 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
           </DialogDescription>
         </DialogHeader>
         <div>
-          <div>
-            <div className="flex items-baseline space-x-2 mb-2">
-              <h4 className="font-semibold">일정상태</h4>
-              <Tooltip open={isTooltipOpen} onOpenChange={setIsTooltipOpen}>
-                <TooltipTrigger asChild>
-                  <span
-                    className="text-sm"
-                    onClick={() => setIsTooltipOpen(true)}
-                  >
-                    (처음이라면 터치해서 필독!)
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="bg-gray-900">
-                  <p className="text-xs text-gray-200 mb-0.5">
-                    ∙ 현재 [약속취소] 상태면, [만남예정]을 선택하고 일정을
-                    변경해주세요.
-                  </p>
-                  <p className="text-xs text-gray-200 mb-0.5">
-                    ∙ 단순한 일정 변경은 [만남예정] 상태에서 진행해주세요.
-                  </p>
-                  <p className="text-xs text-gray-200 mb-0.5">
-                    ∙ 다음 약속이 잡히지 않을때만 [약속취소]를 선택해주세요.{' '}
-                    <br />
-                    <span className="ml-1.5">
-                      (기존 약속된 일정은 그대로 두셔도 됩니다.)
-                    </span>
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-
-            <div>
-              <div className="grid grid-cols-3 text-center border divide-x rounded-lg overflow-hidden">
-                {[
-                  {
-                    label: '취소',
-                    value: AppointmentStatus.CANCELED,
-                    color: 'bg-amber-500',
-                  },
-                  {
-                    label: '약속',
-                    value: AppointmentStatus.SCHEDULED,
-                    color: 'bg-emerald-500',
-                  },
-                  {
-                    label: '완료',
-                    value: AppointmentStatus.COMPLETED,
-                    color: 'bg-blue-500',
-                  },
-                ].map((item) => {
-                  const isDisabled =
-                    updatedAppointment.status === AppointmentStatus.CANCELED &&
-                    item.value === AppointmentStatus.COMPLETED; // ✅ 취소된 경우 '완료' 선택 불가능
-
-                  return (
-                    <div
-                      key={item.value}
-                      className={cn(
-                        'text-sm text-white py-3 cursor-pointer transition-colors',
-                        isDisabled
-                          ? 'bg-gray-200 text-gray-400 cursor-not-allowed' // ❌ 비활성화 스타일
-                          : updatedAppointment.status === item.value
-                          ? item.color
-                          : 'bg-gray-100 text-gray-400'
-                      )}
-                      onClick={() => {
-                        if (!isDisabled) handleStatusChange(item.value);
-                      }}
-                    >
-                      {item.label}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-          <div className="mt-4">
-            <h4 className="font-semibold mb-1">
-              일정변경{' '}
-              <span className="text-xs text-gray-500">
-                (취소/완료 상태에서는 일정변경 불가)
-              </span>
-            </h4>
-            <div className="border rounded-lg py-2">
-              <div className="border-b px-4 pb-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">시간</span>
-                  <div className="space-x-2">
-                    {/* {날짜선택} */}
-                    <Button
-                      onClick={() => {
-                        setIsTimeOpen(false);
-                        setIsDateOpen(!isDateOpen);
-                      }}
-                      disabled={
-                        updatedAppointment.status ===
-                          AppointmentStatus.CANCELED ||
-                        updatedAppointment.status ===
-                          AppointmentStatus.COMPLETED
-                      }
-                      variant={'outline'}
-                      className={cn(
-                        'justify-start text-left font-normal',
-                        !updatedAppointment.date && 'text-muted-foreground',
-                        updatedAppointment.status ===
-                          AppointmentStatus.CANCELED && 'bg-gray-300',
-                        updatedAppointment.status ===
-                          AppointmentStatus.COMPLETED && 'bg-gray-300'
-                      )}
-                    >
-                      <CalendarIcon />
-                      {updatedAppointment.date ? (
-                        dayjs(updatedAppointment.date).format('YYYY. MM. DD.')
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                    {/* {시간선택} */}
-                    <Button
-                      onClick={() => {
-                        setIsDateOpen(false);
-                        setIsTimeOpen(!isTimeOpen);
-                      }}
-                      disabled={
-                        updatedAppointment.status ===
-                          AppointmentStatus.CANCELED ||
-                        updatedAppointment.status ===
-                          AppointmentStatus.COMPLETED
-                      }
-                      variant={'outline'}
-                      className={cn(
-                        'justify-start text-left font-normal',
-                        !updatedAppointment.hour && 'text-muted-foreground',
-                        updatedAppointment.status ===
-                          AppointmentStatus.CANCELED && 'bg-gray-300',
-                        updatedAppointment.status ===
-                          AppointmentStatus.COMPLETED && 'bg-gray-300'
-                      )}
-                    >
-                      <Clock4Icon />
-                      <span>
-                        {updatedAppointment.hour}:{updatedAppointment.minute}
+          {appointment.status !== AppointmentStatus.COMPLETED && (
+            <>
+              <div>
+                <div className="flex items-baseline space-x-2 mb-2">
+                  <h4 className="font-semibold">일정상태</h4>
+                  <Tooltip open={isTooltipOpen} onOpenChange={setIsTooltipOpen}>
+                    <TooltipTrigger asChild>
+                      <span
+                        className="text-sm"
+                        onClick={() => setIsTooltipOpen(true)}
+                      >
+                        (처음이라면 터치해서 필독!)
                       </span>
-                    </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-gray-900">
+                      <p className="text-xs text-gray-200 mb-0.5">
+                        ∙ 현재 [약속취소] 상태면, [만남예정]을 선택하고 일정을
+                        변경해주세요.
+                      </p>
+                      <p className="text-xs text-gray-200 mb-0.5">
+                        ∙ 단순한 일정 변경은 [만남예정] 상태에서 진행해주세요.
+                      </p>
+                      <p className="text-xs text-gray-200 mb-0.5">
+                        ∙ 다음 약속이 잡히지 않을때만 [약속취소]를 선택해주세요.{' '}
+                        <br />
+                        <span className="ml-1.5">
+                          (기존 약속된 일정은 그대로 두셔도 됩니다.)
+                        </span>
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+
+                <div>
+                  <div className="grid grid-cols-3 text-center border divide-x rounded-lg overflow-hidden">
+                    {[
+                      {
+                        label: '취소',
+                        value: AppointmentStatus.CANCELED,
+                        color: 'bg-amber-500',
+                      },
+                      {
+                        label: '약속',
+                        value: AppointmentStatus.SCHEDULED,
+                        color: 'bg-emerald-500',
+                      },
+                      {
+                        label: '완료',
+                        value: AppointmentStatus.COMPLETED,
+                        color: 'bg-blue-500',
+                      },
+                    ].map((item) => {
+                      const isDisabled =
+                        updatedAppointment.status ===
+                          AppointmentStatus.CANCELED &&
+                        item.value === AppointmentStatus.COMPLETED; // ✅ 취소된 경우 '완료' 선택 불가능
+
+                      return (
+                        <div
+                          key={item.value}
+                          className={cn(
+                            'text-sm text-white py-3 cursor-pointer transition-colors',
+                            isDisabled
+                              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' // ❌ 비활성화 스타일
+                              : updatedAppointment.status === item.value
+                              ? item.color
+                              : 'bg-gray-100 text-gray-400'
+                          )}
+                          onClick={() => {
+                            if (!isDisabled) handleStatusChange(item.value);
+                          }}
+                        >
+                          {item.label}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-                <div className="flex justify-center">
-                  {isDateOpen && (
-                    <div className="mt-2">
-                      <Calendar
-                        mode="single"
-                        selected={dayjs(updatedAppointment.date).toDate()}
-                        onSelect={handleDateSelect}
-                        initialFocus
-                      />
+              </div>
+              <div className="mt-4">
+                <h4 className="font-semibold mb-1">
+                  일정변경{' '}
+                  <span className="text-xs text-gray-500">
+                    (취소/완료 상태에서는 일정변경 불가)
+                  </span>
+                </h4>
+                <div className="border rounded-lg py-2">
+                  <div className="border-b px-4 pb-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">시간</span>
+                      <div className="space-x-2">
+                        {/* {날짜선택} */}
+                        <Button
+                          onClick={() => {
+                            setIsTimeOpen(false);
+                            setIsDateOpen(!isDateOpen);
+                          }}
+                          disabled={
+                            updatedAppointment.status ===
+                              AppointmentStatus.CANCELED ||
+                            updatedAppointment.status ===
+                              AppointmentStatus.COMPLETED
+                          }
+                          variant={'outline'}
+                          className={cn(
+                            'justify-start text-left font-normal',
+                            !updatedAppointment.date && 'text-muted-foreground',
+                            updatedAppointment.status ===
+                              AppointmentStatus.CANCELED && 'bg-gray-300',
+                            updatedAppointment.status ===
+                              AppointmentStatus.COMPLETED && 'bg-gray-300'
+                          )}
+                        >
+                          <CalendarIcon />
+                          {updatedAppointment.date ? (
+                            dayjs(updatedAppointment.date).format(
+                              'YYYY. MM. DD.'
+                            )
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                        </Button>
+                        {/* {시간선택} */}
+                        <Button
+                          onClick={() => {
+                            setIsDateOpen(false);
+                            setIsTimeOpen(!isTimeOpen);
+                          }}
+                          disabled={
+                            updatedAppointment.status ===
+                              AppointmentStatus.CANCELED ||
+                            updatedAppointment.status ===
+                              AppointmentStatus.COMPLETED
+                          }
+                          variant={'outline'}
+                          className={cn(
+                            'justify-start text-left font-normal',
+                            !updatedAppointment.hour && 'text-muted-foreground',
+                            updatedAppointment.status ===
+                              AppointmentStatus.CANCELED && 'bg-gray-300',
+                            updatedAppointment.status ===
+                              AppointmentStatus.COMPLETED && 'bg-gray-300'
+                          )}
+                        >
+                          <Clock4Icon />
+                          <span>
+                            {updatedAppointment.hour}:
+                            {updatedAppointment.minute}
+                          </span>
+                        </Button>
+                      </div>
                     </div>
-                  )}
-                  {isTimeOpen && (
-                    <div className="flex p-3 space-x-4 mt-2">
-                      <ScrollArea className="h-[261px] w-32 rounded-md border">
-                        <div className="p-4">
-                          <h4 className="mb-4 text-sm font-medium leading-none">
-                            시간
-                          </h4>
-                          {Array.from({ length: 23 }).map((_, index) => (
-                            <div key={index}>
-                              <div
-                                key={index}
-                                onClick={() =>
-                                  handleTimeSelect(
-                                    index + 1,
-                                    Number(updatedAppointment.minute)
-                                  )
-                                }
-                                className="text-sm cursor-pointer"
-                              >
-                                {(index + 1).toString().padStart(2, '0')}
-                              </div>
-                              <Separator className="my-2" />
-                            </div>
-                          ))}
+                    <div className="flex justify-center">
+                      {isDateOpen && (
+                        <div className="mt-2">
+                          <Calendar
+                            mode="single"
+                            selected={dayjs(updatedAppointment.date).toDate()}
+                            onSelect={handleDateSelect}
+                            initialFocus
+                          />
                         </div>
-                      </ScrollArea>
-                      <ScrollArea className="h-[261px] w-32 rounded-md border">
-                        <div className="p-4">
-                          <h4 className="mb-4 text-sm font-medium leading-none">
-                            분
-                          </h4>
-                          {Array.from({ length: 12 }).map((_, index) => (
-                            <div key={index}>
-                              <div
-                                onClick={() =>
-                                  handleTimeSelect(
-                                    Number(updatedAppointment.hour),
-                                    index * 5
-                                  )
-                                }
-                                className="text-sm cursor-pointer"
-                              >
-                                {(index * 5).toString().padStart(2, '0')}
-                              </div>
-                              <Separator className="my-2" />
+                      )}
+                      {isTimeOpen && (
+                        <div className="flex p-3 space-x-4 mt-2">
+                          <ScrollArea className="h-[261px] w-32 rounded-md border">
+                            <div className="p-4">
+                              <h4 className="mb-4 text-sm font-medium leading-none">
+                                시간
+                              </h4>
+                              {Array.from({ length: 23 }).map((_, index) => (
+                                <div key={index}>
+                                  <div
+                                    key={index}
+                                    onClick={() =>
+                                      handleTimeSelect(
+                                        index + 1,
+                                        Number(updatedAppointment.minute)
+                                      )
+                                    }
+                                    className="text-sm cursor-pointer"
+                                  >
+                                    {(index + 1).toString().padStart(2, '0')}
+                                  </div>
+                                  <Separator className="my-2" />
+                                </div>
+                              ))}
                             </div>
-                          ))}
+                          </ScrollArea>
+                          <ScrollArea className="h-[261px] w-32 rounded-md border">
+                            <div className="p-4">
+                              <h4 className="mb-4 text-sm font-medium leading-none">
+                                분
+                              </h4>
+                              {Array.from({ length: 12 }).map((_, index) => (
+                                <div key={index}>
+                                  <div
+                                    onClick={() =>
+                                      handleTimeSelect(
+                                        Number(updatedAppointment.hour),
+                                        index * 5
+                                      )
+                                    }
+                                    className="text-sm cursor-pointer"
+                                  >
+                                    {(index * 5).toString().padStart(2, '0')}
+                                  </div>
+                                  <Separator className="my-2" />
+                                </div>
+                              ))}
+                            </div>
+                          </ScrollArea>
                         </div>
-                      </ScrollArea>
+                      )}
                     </div>
-                  )}
+                  </div>
+                  <div className="flex justify-between px-4 pt-3 pb-1">
+                    <span className="text-sm">장소</span>
+                    <input
+                      value={updatedAppointment.place}
+                      onChange={handlePlaceChange}
+                      disabled={
+                        updatedAppointment.status ===
+                          AppointmentStatus.CANCELED ||
+                        updatedAppointment.status ===
+                          AppointmentStatus.COMPLETED
+                      }
+                      className={cn(
+                        'w-1/2 text-sm text-right bg-transparent focus:outline-none focus:ring-0 border-0',
+                        'disabled:cursor-not-allowed'
+                      )}
+                      placeholder="장소를 입력해주세요"
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="flex justify-between px-4 pt-3 pb-1">
-                <span className="text-sm">장소</span>
-                <input
-                  value={updatedAppointment.place}
-                  onChange={handlePlaceChange}
-                  disabled={
-                    updatedAppointment.status === AppointmentStatus.CANCELED ||
-                    updatedAppointment.status === AppointmentStatus.COMPLETED
-                  }
-                  className={cn(
-                    'w-1/2 text-sm text-right bg-transparent focus:outline-none focus:ring-0 border-0',
-                    'disabled:cursor-not-allowed'
-                  )}
-                  placeholder="장소를 입력해주세요"
-                />
-              </div>
-            </div>
-          </div>
+            </>
+          )}
           {updatedAppointment.status !== AppointmentStatus.SCHEDULED && (
             <div className="mt-4">
-              <h4 className="font-semibold mb-1">만남후기 작성</h4>
+              <h4 className="font-semibold mb-1">만남 후기 작성</h4>
               <Textarea
-                rows={5}
-                placeholder="후기를 입력해 주세요."
+                rows={7}
+                placeholder={`(작성 가이드) 멘티의 기도제목, 영적상태 그리고 중요했던 나눔 내용들을 작성해주세요.`}
                 value={updatedAppointment.review}
                 onChange={handleReviewChange}
+                className="text-sm placeholder:text-zinc-400"
               />
             </div>
           )}
