@@ -60,7 +60,11 @@ export const getWeeksBetweenDates = (
   const start = dayjs(startDate);
   const end = dayjs(endDate);
 
-  return end.diff(start, 'week'); // 주 단위 차이 계산
+  // 날짜 차이를 일(day) 단위로 계산
+  const dayDifference = end.diff(start, 'day');
+
+  // 7일 미만은 1주차, 이후는 7일 단위로 올림 처리
+  return dayDifference < 7 ? 1 : Math.ceil(dayDifference / 7);
 };
 
 export function getDayOfWeek(dateStr: string): string {
@@ -126,4 +130,37 @@ export const getClosestSunday = (): string => {
 
   // 'YYYY-MM-DD' 형식으로 반환
   return closestSunday.format('YYYY-MM-DD');
+};
+
+//바나바 진행기간 구하기
+export const getProgressDuration = ({
+  matchingDate,
+  completedDate,
+  lastMeetingDate,
+  completedMeetingCount,
+  scheduledMeetingCount,
+}: {
+  matchingDate: string;
+  completedDate?: string;
+  lastMeetingDate?: string;
+  completedMeetingCount: string;
+  scheduledMeetingCount: string;
+}): number => {
+  // 종료일(endDate) 계산 (빈 문자열 무시)
+  const validCompletedDate =
+    completedDate && completedDate.trim() !== '' ? completedDate : undefined;
+  const validLastMeetingDate =
+    lastMeetingDate && lastMeetingDate.trim() !== ''
+      ? lastMeetingDate
+      : undefined;
+
+  // 종료일(endDate) 계산
+  const endDate =
+    validCompletedDate ?? // 1) 완료일이 있으면 그걸 사용
+    (completedMeetingCount === scheduledMeetingCount
+      ? validLastMeetingDate ?? dayjs().format('YYYY-MM-DD') // 2) 모든 만남 완료면 마지막 만남일
+      : dayjs().format('YYYY-MM-DD')); // 3) 진행 중이면 현재일
+
+  // 기존 유틸함수 getWeeksBetweenDates 활용
+  return getWeeksBetweenDates(matchingDate, endDate);
 };

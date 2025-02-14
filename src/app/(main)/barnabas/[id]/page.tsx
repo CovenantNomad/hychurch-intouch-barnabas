@@ -5,6 +5,7 @@ import Header from '@/components/common/Header';
 import { MainDropdownMenu } from '@/components/common/Header/_components/MainDropdownMenu';
 import AppointmentDetail from './_components/AppointmentDetail';
 import CourseInfomation from './_components/CourseInfomation';
+import PrepareSmt from './_components/PrepareSmt';
 
 const BarnabasDetailPage = () => {
   return (
@@ -13,7 +14,7 @@ const BarnabasDetailPage = () => {
       <Container>
         <CourseInfomation />
         <AppointmentDetail />
-        {/* <PrepareSmt /> */}
+        <PrepareSmt />
       </Container>
     </>
   );

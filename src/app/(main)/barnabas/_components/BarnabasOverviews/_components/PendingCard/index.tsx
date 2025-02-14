@@ -1,13 +1,46 @@
-import { getWeeksBetweenDates } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import { getProgressDuration } from '@/lib/utils';
+import { useDelayAlertStore } from '@/stores/delayAlertStore';
 import { useMatchingStore } from '@/stores/matchingState';
 import { TMatching } from '@/types/barnabas.types';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 type Props = {
   course: TMatching;
 };
 
 const PendingCard = ({ course }: Props) => {
+  const { hasShownProgressToast, setHasShownProgressToast } =
+    useDelayAlertStore();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const duration = getProgressDuration({
+      matchingDate: course.matchingDate,
+      completedDate: course.completedDate,
+      lastMeetingDate: course.lastMeetingDate,
+      completedMeetingCount: course.completedMeetingCount,
+      scheduledMeetingCount: course.scheduledMeetingCount,
+    });
+    if (!hasShownProgressToast && duration > 8) {
+      toast({
+        title: '🚨 바나바 진행기간 알림',
+        description: (
+          <>
+            {course.menteeName} 멘티와의 과정이 {duration}주째 진행 중입니다.
+            <br />
+            진행 상황을 확인해주세요.
+          </>
+        ),
+        variant: 'destructive',
+        duration: 5000,
+      });
+
+      setHasShownProgressToast(true);
+    }
+  }, [course, toast, hasShownProgressToast, setHasShownProgressToast]);
+
   const setSelectedMatching = useMatchingStore(
     (state) => state.setSelectedMatching
   );
@@ -46,12 +79,13 @@ const PendingCard = ({ course }: Props) => {
             <div className="flex justify-between py-2 pr-4 text-sm">
               <span>교육기간</span>
               <span>
-                {course.lastMeetingDate
-                  ? getWeeksBetweenDates(
-                      course.matchingDate,
-                      course.lastMeetingDate
-                    ) + 1
-                  : 0}
+                {getProgressDuration({
+                  matchingDate: course.matchingDate,
+                  completedDate: course.completedDate,
+                  lastMeetingDate: course.lastMeetingDate,
+                  completedMeetingCount: course.completedMeetingCount,
+                  scheduledMeetingCount: course.scheduledMeetingCount,
+                })}
                 주
               </span>
             </div>
