@@ -362,11 +362,39 @@ async function updateMatchingData(
 
     // Firestore에 업데이트
     await updateDoc(matchingRef, updatedMatchingData);
-
-    console.log(`✅ 매칭(${matchingId}) 업데이트 완료:`, updatedMatchingData);
   } catch (error) {
     console.log('@updateMatchingData: ', error);
     throw new Error('매칭 업데이트에 실패했습니다.');
+  }
+}
+
+export async function updateAppointmentReview(
+  appointmentId: string,
+  review: string
+) {
+  try {
+    // Firestore 문서 참조
+    const appointmentRef = doc(
+      db,
+      BARNABAS_COLLCTION.BARNABAS,
+      BARNABAS_COLLCTION.DATA,
+      BARNABAS_COLLCTION.MEETINGSCHEDULES,
+      appointmentId
+    );
+
+    // 문서가 존재하는지 확인
+    const docSnap = await getDoc(appointmentRef);
+    if (!docSnap.exists()) {
+      throw new Error('해당 약속을 찾을 수 없습니다.');
+    }
+
+    // Firestore 문서 업데이트 (리뷰만 변경)
+    await updateDoc(appointmentRef, { review });
+
+    return { appointmentId, review };
+  } catch (error) {
+    console.error('❌ 리뷰 업데이트 에러:', error);
+    throw new Error('리뷰 업데이트에 실패했습니다. 다시 시도해주세요.');
   }
 }
 
@@ -536,3 +564,47 @@ export const checkAttendanceSubmit = async (
     throw new Error('멘티 예배출석 제출 여부를 조회하는데 실패했습니다.');
   }
 };
+
+export async function getMentorshipById(
+  matchingId: string
+): Promise<TMatching | null> {
+  try {
+    // 컬렉션 참조
+    const barnabasRef = doc(
+      db,
+      BARNABAS_COLLCTION.BARNABAS,
+      BARNABAS_COLLCTION.DATA,
+      BARNABAS_COLLCTION.BARNABAMENTORSHIPS,
+      matchingId
+    );
+
+    // 쿼리 실행
+    const docSnap = await getDoc(barnabasRef);
+
+    if (!docSnap.exists()) {
+      console.warn(`⚠️ 멘토십(${matchingId})을 찾을 수 없습니다.`);
+      return null; // 데이터가 없을 경우 null 반환
+    }
+
+    // 결과 반환
+    const data = docSnap.data();
+    return {
+      id: docSnap.id,
+      barnabaId: data.barnabaId || '',
+      menteeId: data.menteeId || '',
+      barnabaName: data.barnabaName || '',
+      menteeName: data.menteeName || '',
+      status: data.status || TMatchingStatus.PENDING,
+      firstMeetingDate: data.firstMeetingDate || null,
+      lastMeetingDate: data.lastMeetingDate || null,
+      matchingDate: data.matchingDate || new Date().toISOString(),
+      completedDate: data.completedDate || null,
+      completedMeetingCount: data.completedMeetingCount || '0',
+      scheduledMeetingCount: data.scheduledMeetingCount || '0',
+      description: data.description || '',
+    };
+  } catch (error) {
+    console.error('❌ 멘토십 찾기 실패:', error);
+    throw new Error('멘토십 정보를 불러오는 데 실패했습니다.');
+  }
+}

@@ -1,44 +1,66 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { getMatchingMessage } from '@/lib/utils';
+import { getMentorshipById } from '@/repositories/barnabas';
 import { useMatchingStore } from '@/stores/matchingState';
 import { TMatchingStatus } from '@/types/barnabas.types';
-import { LinkIcon } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { LinkIcon, RotateCcwIcon } from 'lucide-react';
 import BarnabaProfileCard from './_components/BarnabaProfileCard';
 import MenteeProfileCard from './_components/MenteeProfileCard';
 
 const CourseInfomation = () => {
   const selectedMatching = useMatchingStore((state) => state.selectedMatching);
 
+  const { isFetching, data, refetch } = useQuery({
+    queryKey: ['getMentorshipById', selectedMatching!.id],
+    queryFn: () => getMentorshipById(selectedMatching!.id),
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    enabled: !!selectedMatching,
+    initialData: selectedMatching,
+  });
+
   return (
     <>
       <div className="flex justify-between items-center">
-        <h4 className="font-medium">바나바 과정</h4>
-        {selectedMatching ? (
+        <div className="flex justify-between items-center">
+          <h4 className="font-medium mr-2">바나바 과정</h4>
+          <div className="flex items-center space-x-2">
+            <Button size={'sm'} variant={'ghost'} onClick={() => refetch()}>
+              <RotateCcwIcon />
+            </Button>
+            {isFetching && (
+              <span className="text-xs text-gray-300">새로고침 중...</span>
+            )}
+          </div>
+        </div>
+        {data ? (
           <div
             className={`text-white text-sm px-1.5 py-0.5 rounded-full ${
-              selectedMatching.status === TMatchingStatus.PROGRESS
+              data.status === TMatchingStatus.PROGRESS
                 ? 'bg-emerald-500'
-                : selectedMatching.status === TMatchingStatus.COMPLETED
+                : data.status === TMatchingStatus.COMPLETED
                 ? 'bg-blue-500'
-                : selectedMatching.status === TMatchingStatus.PENDING
+                : data.status === TMatchingStatus.PENDING
                 ? 'bg-amber-500'
                 : 'bg-rose-500'
             }`}
           >
-            {getMatchingMessage(selectedMatching.status)}
+            {getMatchingMessage(data.status)}
           </div>
         ) : (
           <div></div>
         )}
       </div>
       <div>
-        {selectedMatching ? (
+        {data ? (
           <>
             <div className="">
               <div className="relative flex justify-center items-center space-x-2 py-4 mx-auto">
                 {/* Left Card */}
-                <BarnabaProfileCard barnabasId={selectedMatching.barnabaId} />
+                <BarnabaProfileCard barnabasId={data.barnabaId} />
 
                 {/* VS Section */}
                 <div className="absolute flex items-center justify-center left-1/2 top-1/2 transform -translate-x-[70%] -translate-y-1/2">
@@ -48,7 +70,7 @@ const CourseInfomation = () => {
                 </div>
 
                 {/* Right Card */}
-                <MenteeProfileCard menteeId={selectedMatching.menteeId} />
+                <MenteeProfileCard menteeId={data.menteeId} />
               </div>
             </div>
             <div className="py-6 mt-2 mx-auto">
@@ -56,31 +78,31 @@ const CourseInfomation = () => {
                 <div className="flex justify-between space-x-6 pb-2 px-4 text-sm">
                   <div className="flex-1 flex justify-between">
                     <span>진행횟수</span>
-                    <span>{selectedMatching.completedMeetingCount}회</span>
+                    <span>{data.completedMeetingCount}회</span>
                   </div>
                   <div className="flex-1 flex justify-between">
                     <span>예정횟수</span>
-                    <span>{selectedMatching.scheduledMeetingCount}회</span>
+                    <span>{data.scheduledMeetingCount}회</span>
                   </div>
                 </div>
                 <div className="flex justify-between space-x-6 py-2 px-4 border-t border-b text-sm">
                   <div className="flex-1 flex justify-between">
                     <span>매칭일</span>
-                    <span>{selectedMatching.matchingDate || '미정'}</span>
+                    <span>{data.matchingDate || '미정'}</span>
                   </div>
                   <div className="flex-1 flex justify-between">
                     <span>완료일</span>
-                    <span>{selectedMatching.completedDate || '미정'}</span>
+                    <span>{data.completedDate || '미정'}</span>
                   </div>
                 </div>
                 <div className="flex justify-between space-x-6 pt-2 px-4 text-sm">
                   <div className="flex-1 flex justify-between">
-                    <span>최초 만남일</span>
-                    <span>{selectedMatching.firstMeetingDate || '미정'}</span>
+                    <span>최초만남</span>
+                    <span>{data.firstMeetingDate || '미정'}</span>
                   </div>
                   <div className="flex-1 flex justify-between">
-                    <span>최근 만남일</span>
-                    <span>{selectedMatching.lastMeetingDate || '미정'}</span>
+                    <span>최근만남</span>
+                    <span>{data.lastMeetingDate || '미정'}</span>
                   </div>
                 </div>
               </div>

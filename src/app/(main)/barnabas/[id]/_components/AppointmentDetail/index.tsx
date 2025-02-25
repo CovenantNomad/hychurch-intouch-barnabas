@@ -58,8 +58,9 @@ const AppointmentDetail = () => {
                     <TimeDisplay
                       hour={appointment.hour}
                       minute={appointment.minute}
+                      isLeft
                     />
-                    <LocationDisplay place={appointment.place} />
+                    <LocationDisplay place={appointment.place} isLeft />
                   </div>
                   <UpdateAppointment
                     appointment={appointment}
