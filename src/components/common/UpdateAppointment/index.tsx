@@ -21,12 +21,15 @@ import {
 } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { updateAppointment } from '@/repositories/barnabas';
+import {
+  updateAppointment,
+  updateAppointmentReview,
+} from '@/repositories/barnabas';
 import { AppointmentStatus, TAppointment } from '@/types/barnabas.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { CalendarIcon, Clock4Icon } from 'lucide-react';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 
 type Props = {
   appointment: TAppointment;
@@ -42,6 +45,8 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
   const [isTimeOpen, setIsTimeOpen] = useState(false);
   const [updatedAppointment, setUpdatedAppointment] =
     useState<TAppointment>(appointment);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   // 상태 변경 핸들러
   const handleStatusChange = (status: AppointmentStatus) => {
@@ -112,12 +117,53 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
           dayjs(updatedAppointment.date).format('YYYY-MM'),
         ],
       });
+      queryClient.refetchQueries({
+        queryKey: ['getMentorshipById', appointment.matchingId],
+      });
       setIsOpen(false);
     },
 
     onError: (error) => {
       toast({
         title: '❗️약속 업데이트 실패',
+        description:
+          error instanceof Error ? error.message : '알 수 없는 오류입니다.',
+      });
+    },
+  });
+
+  const reviewMutaion = useMutation({
+    mutationFn: ({
+      appointmentId,
+      review,
+    }: {
+      appointmentId: string;
+      review: string;
+    }) => updateAppointmentReview(appointmentId, review), // TAppointment 타입 데이터 전달
+
+    onSuccess: () => {
+      toast({
+        title: '✅ 만남 후기 작성 성공',
+        description: `만남 후기가 업데이트 되었습니다.`,
+      });
+      queryClient.refetchQueries({
+        queryKey: ['getAppointmentDetails'],
+      });
+      queryClient.refetchQueries({
+        queryKey: ['findProgressMentorships'],
+      });
+      queryClient.refetchQueries({
+        queryKey: [
+          'monthlyAppointments',
+          dayjs(updatedAppointment.date).format('YYYY-MM'),
+        ],
+      });
+      setIsOpen(false);
+    },
+
+    onError: (error) => {
+      toast({
+        title: '❗️만남 후기 작성 실패',
         description:
           error instanceof Error ? error.message : '알 수 없는 오류입니다.',
       });
@@ -147,14 +193,62 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
     });
   };
 
+  const handleSaveReviewChanges = () => {
+    if (!updatedAppointment.appointmentId) {
+      toast({
+        title: '❗️오류',
+        description: '유효한 일정의 ID가 없습니다.',
+      });
+      return;
+    }
+
+    reviewMutaion.mutate({
+      appointmentId: updatedAppointment.appointmentId,
+      review: updatedAppointment.review,
+    });
+  };
+
+  // ✅ 키보드 감지 함수 (iOS & Android 대응)
+  useEffect(() => {
+    const handleFocus = () => setIsKeyboardOpen(true);
+    const handleBlur = () => setIsKeyboardOpen(false);
+
+    // 모바일 환경에서 키보드가 올라오면 감지
+    const textArea = document.getElementById('review-textarea');
+    if (textArea) {
+      textArea.addEventListener('focus', handleFocus);
+      textArea.addEventListener('blur', handleBlur);
+    }
+
+    return () => {
+      if (textArea) {
+        textArea.removeEventListener('focus', handleFocus);
+        textArea.removeEventListener('blur', handleBlur);
+      }
+    };
+  }, []);
+
+  // ✅ 키보드가 열리면 Dialog가 위로 올라가도록 처리
+  useEffect(() => {
+    if (isKeyboardOpen && dialogRef.current) {
+      dialogRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [isKeyboardOpen]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
-      <DialogContent className="max-w-[382px] md:max-w-[425px]">
+      <DialogContent
+        ref={dialogRef}
+        className={`max-w-[382px] md:max-w-[425px] transition-all ${
+          isKeyboardOpen ? 'mt-[-20vh]' : ''
+        }`}
+      >
         <DialogHeader>
           <DialogTitle>일정관리</DialogTitle>
           <DialogDescription>
-            바나바 만남에 대한 상태와 일정변경을 여기서 진행해주세요.
+            {appointment.status !== AppointmentStatus.COMPLETED &&
+              '바나바 만남에 대한 상태와 일정변경을 여기서 진행해주세요.'}
           </DialogDescription>
         </DialogHeader>
         <div>
@@ -174,14 +268,14 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
                     </TooltipTrigger>
                     <TooltipContent className="bg-gray-900">
                       <p className="text-xs text-gray-200 mb-0.5">
-                        ∙ 현재 [약속취소] 상태면, [만남예정]을 선택하고 일정을
+                        ∙ 현재 [취소] 상태면, [약속]을 선택하고 일정을
                         변경해주세요.
                       </p>
                       <p className="text-xs text-gray-200 mb-0.5">
-                        ∙ 단순한 일정 변경은 [만남예정] 상태에서 진행해주세요.
+                        ∙ 단순한 일정 변경은 [약속] 상태에서 진행해주세요.
                       </p>
                       <p className="text-xs text-gray-200 mb-0.5">
-                        ∙ 다음 약속이 잡히지 않을때만 [약속취소]를 선택해주세요.{' '}
+                        ∙ 다음 약속이 잡히지 않을때만 [취소]를 선택해주세요.{' '}
                         <br />
                         <span className="ml-1.5">
                           (기존 약속된 일정은 그대로 두셔도 됩니다.)
@@ -398,8 +492,14 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
           )}
           {updatedAppointment.status !== AppointmentStatus.SCHEDULED && (
             <div className="mt-4">
-              <h4 className="font-semibold mb-1">만남 후기 작성</h4>
+              <h4 className="font-semibold">
+                만남 후기 작성
+                <span className="inline-block text-xs font-normal text-gray-500 mb-1 ml-2">
+                  (뛰어쓰기/줄바꿈 모두 적용됩니다)
+                </span>
+              </h4>
               <Textarea
+                id="review-textarea"
                 rows={7}
                 placeholder={`(작성 가이드) 멘티의 기도제목, 영적상태 그리고 중요했던 나눔 내용들을 작성해주세요.`}
                 value={updatedAppointment.review}
@@ -410,9 +510,15 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
           )}
         </div>
         <DialogFooter className="mt-2">
-          <Button type="submit" onClick={handleSaveChanges}>
-            저장하기
-          </Button>
+          {appointment.status === AppointmentStatus.COMPLETED ? (
+            <Button type="submit" onClick={handleSaveReviewChanges}>
+              업데이트
+            </Button>
+          ) : (
+            <Button type="submit" onClick={handleSaveChanges}>
+              저장하기
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
