@@ -105,19 +105,19 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
           'YYYY. MM. DD.'
         )} 약속이 업데이트 되었습니다.`,
       });
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ['getAppointmentDetails'],
       });
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ['findProgressMentorships'],
       });
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: [
           'monthlyAppointments',
           dayjs(updatedAppointment.date).format('YYYY-MM'),
         ],
       });
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ['getMentorshipById', appointment.matchingId],
       });
       setIsOpen(false);
@@ -146,13 +146,13 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
         title: '✅ 만남 후기 작성 성공',
         description: `만남 후기가 업데이트 되었습니다.`,
       });
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ['getAppointmentDetails'],
       });
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ['findProgressMentorships'],
       });
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: [
           'monthlyAppointments',
           dayjs(updatedAppointment.date).format('YYYY-MM'),
