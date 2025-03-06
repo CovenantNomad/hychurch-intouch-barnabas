@@ -55,7 +55,7 @@ const CheckAttendance = ({ sunday, course }: Props) => {
           'YYYY. MM. DD.'
         )} 출석체크가 제출되었습니다.`,
       });
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: ['checkAttendanceSubmit', sunday, course.menteeId],
       });
       resetForm();
