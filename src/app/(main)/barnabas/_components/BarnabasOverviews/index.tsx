@@ -36,7 +36,7 @@ const BarnabasOverviews = () => {
         </div>
         <p className="underline text-base">현재진행 : {data?.length || 0}명</p>
       </div>
-      <div className="mt-10">
+      <div className="mt-10 pb-12">
         <div>
           <h4 className="text-lg text-blue-600 font-semibold">진행중인 과정</h4>
           <p className="text-sm text-gray-500 mt-1">

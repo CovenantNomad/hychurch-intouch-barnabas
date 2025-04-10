@@ -33,7 +33,7 @@ const AttendanceOverview = () => {
         </div>
         <p className="underline text-base">현재진행 : {data?.length || 0}명</p>
       </div>
-      <div className="mt-10">
+      <div className="mt-10 pb-12">
         <h4 className="text-lg text-gray-900 font-semibold">
           주일예배 출석체크
         </h4>

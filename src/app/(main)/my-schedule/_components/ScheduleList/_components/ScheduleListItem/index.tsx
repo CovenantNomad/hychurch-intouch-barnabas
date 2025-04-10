@@ -7,8 +7,13 @@ import UpdateAppointment from '@/components/common/UpdateAppointment';
 import { Button } from '@/components/ui/button';
 import { getDayOfWeek } from '@/lib/utils';
 import { useAuthStore } from '@/stores/authState';
-import { TAppointment, TMatchingStatus } from '@/types/barnabas.types';
-import { EditIcon } from 'lucide-react';
+import {
+  AppointmentStatus,
+  TAppointment,
+  TMatchingStatus,
+} from '@/types/barnabas.types';
+import { EditIcon, Settings2Icon } from 'lucide-react';
+import Link from 'next/link';
 
 type Props = {
   appointment: TAppointment;
@@ -51,14 +56,22 @@ const ScheduleListItem = ({ appointment, index }: Props) => {
         appointment.matchingStatus !== TMatchingStatus.COMPLETED &&
         appointment.matchingStatus !== TMatchingStatus.FAILED && (
           <div className="ml-4">
-            <UpdateAppointment
-              appointment={appointment}
-              triggerComponent={
+            {appointment.status !== AppointmentStatus.COMPLETED ? (
+              <UpdateAppointment
+                appointment={appointment}
+                triggerComponent={
+                  <Button variant={'outline'}>
+                    <Settings2Icon />
+                  </Button>
+                }
+              />
+            ) : (
+              <Link href={`/reviews/${appointment.appointmentId}`}>
                 <Button variant={'outline'}>
                   <EditIcon />
                 </Button>
-              }
-            />
+              </Link>
+            )}
           </div>
         )}
     </div>

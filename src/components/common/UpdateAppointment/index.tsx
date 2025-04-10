@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Tooltip,
   TooltipContent,
@@ -21,10 +20,7 @@ import {
 } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import {
-  updateAppointment,
-  updateAppointmentReview,
-} from '@/repositories/barnabas';
+import { updateAppointment } from '@/repositories/barnabas';
 import { AppointmentStatus, TAppointment } from '@/types/barnabas.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -81,14 +77,6 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
     }));
   };
 
-  // 후기 입력 핸들러
-  const handleReviewChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setUpdatedAppointment((prev) => ({
-      ...prev,
-      review: e.target.value,
-    }));
-  };
-
   const mutation = useMutation({
     mutationFn: ({
       appointmentId,
@@ -132,46 +120,8 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
     },
   });
 
-  const reviewMutaion = useMutation({
-    mutationFn: ({
-      appointmentId,
-      review,
-    }: {
-      appointmentId: string;
-      review: string;
-    }) => updateAppointmentReview(appointmentId, review), // TAppointment 타입 데이터 전달
-
-    onSuccess: () => {
-      toast({
-        title: '✅ 만남 후기 작성 성공',
-        description: `만남 후기가 업데이트 되었습니다.`,
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['getAppointmentDetails'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['findProgressMentorships'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: [
-          'monthlyAppointments',
-          dayjs(updatedAppointment.date).format('YYYY-MM'),
-        ],
-      });
-      setIsOpen(false);
-    },
-
-    onError: (error) => {
-      toast({
-        title: '❗️만남 후기 작성 실패',
-        description:
-          error instanceof Error ? error.message : '알 수 없는 오류입니다.',
-      });
-    },
-  });
-
   // 변경 사항 저장
-  const handleSaveChanges = () => {
+  const onSavehandler = () => {
     if (!updatedAppointment.appointmentId) {
       toast({
         title: '❗️오류',
@@ -188,23 +138,7 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
         minute: updatedAppointment.minute,
         place: updatedAppointment.place,
         status: updatedAppointment.status,
-        review: updatedAppointment.review,
       },
-    });
-  };
-
-  const handleSaveReviewChanges = () => {
-    if (!updatedAppointment.appointmentId) {
-      toast({
-        title: '❗️오류',
-        description: '유효한 일정의 ID가 없습니다.',
-      });
-      return;
-    }
-
-    reviewMutaion.mutate({
-      appointmentId: updatedAppointment.appointmentId,
-      review: updatedAppointment.review,
     });
   };
 
@@ -247,8 +181,7 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
         <DialogHeader>
           <DialogTitle>일정관리</DialogTitle>
           <DialogDescription>
-            {appointment.status !== AppointmentStatus.COMPLETED &&
-              '바나바 만남에 대한 상태와 일정변경을 여기서 진행해주세요.'}
+            바나바 만남에 대한 상태와 일정변경을 여기서 진행해주세요.
           </DialogDescription>
         </DialogHeader>
         <div>
@@ -487,38 +420,21 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
                     />
                   </div>
                 </div>
+                <p className="text-xs text-gray-500 mt-2 whitespace-pre">
+                  {`만남후기는 완료상태로 저장 후 완료된 약속에서 작성해주세요\n캘린더에서 업데이트가 안되면, '일정 동기화'를 눌러주세요.`}
+                </p>
               </div>
             </>
           )}
-          {updatedAppointment.status !== AppointmentStatus.SCHEDULED && (
-            <div className="mt-4">
-              <h4 className="font-semibold">
-                만남 후기 작성
-                <span className="inline-block text-xs font-normal text-gray-500 mb-1 ml-2">
-                  (뛰어쓰기/줄바꿈 모두 적용됩니다)
-                </span>
-              </h4>
-              <Textarea
-                id="review-textarea"
-                rows={7}
-                placeholder={`(작성 가이드) 멘티의 기도제목, 영적상태 그리고 중요했던 나눔 내용들을 작성해주세요.`}
-                value={updatedAppointment.review}
-                onChange={handleReviewChange}
-                className="text-sm placeholder:text-zinc-400"
-              />
-            </div>
-          )}
         </div>
         <DialogFooter className="mt-2">
-          {appointment.status === AppointmentStatus.COMPLETED ? (
-            <Button type="submit" onClick={handleSaveReviewChanges}>
-              업데이트
-            </Button>
-          ) : (
-            <Button type="submit" onClick={handleSaveChanges}>
-              저장하기
-            </Button>
-          )}
+          <Button
+            type="submit"
+            onClick={onSavehandler}
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? '저장 중...' : '저장하기'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

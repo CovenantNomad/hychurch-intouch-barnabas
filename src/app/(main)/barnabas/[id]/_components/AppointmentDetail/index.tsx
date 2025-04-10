@@ -7,8 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getAppointmentDetails } from '@/repositories/barnabas';
 import { useMatchingStore } from '@/stores/matchingState';
+import { AppointmentStatus } from '@/types/barnabas.types';
 import { useQuery } from '@tanstack/react-query';
 import { MessageSquareXIcon, RotateCcwIcon } from 'lucide-react';
+import Link from 'next/link';
 
 const AppointmentDetail = () => {
   const selectedMatching = useMatchingStore((state) => state.selectedMatching);
@@ -16,8 +18,8 @@ const AppointmentDetail = () => {
   const { isLoading, isFetching, data, refetch } = useQuery({
     queryKey: ['getAppointmentDetails', selectedMatching!.id],
     queryFn: () => getAppointmentDetails(selectedMatching!.id),
-    staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
     enabled: !!selectedMatching,
   });
 
@@ -62,12 +64,18 @@ const AppointmentDetail = () => {
                     />
                     <LocationDisplay place={appointment.place} isLeft />
                   </div>
-                  <UpdateAppointment
-                    appointment={appointment}
-                    triggerComponent={
-                      <Button className="rounded-full">자세히 보기</Button>
-                    }
-                  />
+                  {appointment.status !== AppointmentStatus.COMPLETED ? (
+                    <UpdateAppointment
+                      appointment={appointment}
+                      triggerComponent={
+                        <Button className="rounded-full">일정 관리</Button>
+                      }
+                    />
+                  ) : (
+                    <Link href={`/reviews/${appointment.appointmentId}`}>
+                      <Button className="rounded-full">후기 관리</Button>
+                    </Link>
+                  )}
                 </div>
               </div>
             ))

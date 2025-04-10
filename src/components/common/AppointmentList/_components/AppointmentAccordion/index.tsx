@@ -29,7 +29,7 @@ const AppointmentAccordion = ({ sortedAppointments }: Props) => {
   }, [sortedAppointments]);
 
   return (
-    <div className="px-6">
+    <>
       <Accordion
         type="multiple"
         value={openItems}
@@ -64,7 +64,7 @@ const AppointmentAccordion = ({ sortedAppointments }: Props) => {
           </AccordionItem>
         ))}
       </Accordion>
-    </div>
+    </>
   );
 };
 
