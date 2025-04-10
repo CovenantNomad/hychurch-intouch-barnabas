@@ -240,6 +240,37 @@ export async function getMenteeProfile(menteeId: string) {
   }
 }
 
+// 약속ID로 약속정보 가져오는 함수
+export async function getAppointmentById(
+  appointmentId: string
+): Promise<TAppointment | null> {
+  try {
+    // 약속 일정 컬렉션 참조
+    const appointmentRef = doc(
+      db,
+      BARNABAS_COLLCTION.BARNABAS,
+      BARNABAS_COLLCTION.DATA,
+      BARNABAS_COLLCTION.MEETINGSCHEDULES,
+      appointmentId
+    );
+
+    const docSnap = await getDoc(appointmentRef);
+
+    if (!docSnap.exists()) {
+      console.warn(
+        `❗일치하는 약속이 없습니다. appointmentId: ${appointmentId}`
+      );
+      return null;
+    }
+
+    return docSnap.data() as TAppointment;
+  } catch (error) {
+    console.error('🔥 getAppointmentById 실패:', error);
+    throw new Error('약속 정보를 가져오는 중 오류가 발생했습니다.');
+  }
+}
+
+// 매칭ID로 바나바매칭과 연관된 약속정보 가져오는 함수
 export async function getAppointmentDetails(
   matchingId: string
 ): Promise<TAppointment[]> {
@@ -345,9 +376,7 @@ async function updateMatchingData(
       }
 
       // ✅ 진행된 만남 횟수 증가
-      updatedMatchingData.completedMeetingCount = (
-        Number(matchingData.completedMeetingCount) + 1
-      ).toString();
+      updatedMatchingData.completedMeetingCount = week;
     }
 
     // ✅ 약속이 `CANCELED`이면 매칭 상태를 `PENDING`으로 변경

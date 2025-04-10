@@ -31,7 +31,7 @@ const PrepareSmt = () => {
   }, []);
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 pb-12">
       <div className="flex justify-between items-center">
         <h4 className="font-medium">SMT 준비하기</h4>
         <div className="flex items-center space-x-2">
@@ -53,9 +53,10 @@ const PrepareSmt = () => {
                 보고서는 기존에 작성했던 만남후기와 데이터를 바탕으로 자동생성
                 됩니다.
                 <br />
-                만남후기를 변경하고 싶으시면, 세부일정에서 [자세히보기]를 눌러서
+                만남후기를 변경하고 싶으시면, 세부일정에서 [후기 관리]를 눌러서
                 <br />
-                [만남후기]를 수정해주시고, 새로고침 버튼 한번 눌러주세요
+                만남후기를 수정해주시고, 혹시 반영이 안되면 새로고침 버튼 한번
+                눌러주세요
               </p>
               <ReportPopup course={selectedMatching} appointments={data} />
             </div>

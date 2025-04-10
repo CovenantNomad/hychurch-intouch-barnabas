@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -35,6 +36,7 @@ const ReportPopup = ({ course, appointments }: Props) => {
           <DialogTitle className="text-center text-xl font-semibold">
             바나바 과정 SMT 리포트 생성
           </DialogTitle>
+          <DialogDescription />
         </DialogHeader>
 
         <div className="max-w-[210mm] max-h-[297mm] p-[10mm]" ref={contentRef}>

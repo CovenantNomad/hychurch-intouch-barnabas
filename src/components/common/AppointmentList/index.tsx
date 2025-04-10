@@ -17,8 +17,8 @@ const AppointmentList = ({ appointments, isLoading, isFetching }: Props) => {
   const sortedAppointments = groupAndSortDailyAppointments(appointments);
 
   return (
-    <div className="pt-6 pb-32">
-      <div className="flex justify-between px-6 pb-4">
+    <div className="pt-6 px-6">
+      <div className="flex justify-between pb-4">
         <h4 className="">
           {dayjs(selectedDate)?.format('YYYY. MM. DD.')}{' '}
           <span className="inline-block ml-2 text-sm tracking-wide">
@@ -34,7 +34,7 @@ const AppointmentList = ({ appointments, isLoading, isFetching }: Props) => {
       </div>
       <div>
         {isLoading ? (
-          <div className="px-6 space-y-6">
+          <div className="space-y-6">
             <Skeleton className="w-full h-7 pt-4 pb-1" />
             <Skeleton className="w-full h-7 pt-4 pb-1" />
             <Skeleton className="w-full h-7 pt-4 pb-1" />
@@ -42,7 +42,7 @@ const AppointmentList = ({ appointments, isLoading, isFetching }: Props) => {
         ) : appointments.length !== 0 ? (
           <AppointmentAccordion sortedAppointments={sortedAppointments} />
         ) : (
-          <div className="h-40 flex items-center justify-center px-6 py-4">
+          <div className="h-40 flex items-center justify-center py-4">
             <span className="text-lg font-semibold">일정 없음</span>
           </div>
         )}

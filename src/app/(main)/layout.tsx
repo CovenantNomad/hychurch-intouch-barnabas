@@ -11,7 +11,7 @@ export default function MainLayout({
   useAuthCheck();
 
   return (
-    <div className="min-h-svh w-full">
+    <div className="min-h-svh h-svh flex flex-col">
       {children}
       <BottomTab />
     </div>

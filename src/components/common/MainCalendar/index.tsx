@@ -41,9 +41,9 @@ export default function MainCalendar({ groupedAppointments, refetch }: Props) {
     setCurrentDate((prev: Dayjs) => prev.add(1, 'month'));
 
   return (
-    <div className="mx-auto mt-6">
+    <>
       {/* 상단 네비게이션 */}
-      <div className="relative flex justify-center mb-6 px-6 ">
+      <div className="relative flex justify-center px-6 mb-6">
         <div className="flex items-center space-x-8">
           <Button
             onClick={handlePrevMonth}
@@ -68,7 +68,7 @@ export default function MainCalendar({ groupedAppointments, refetch }: Props) {
         </div>
       </div>
 
-      <div className="flex justify-end space-x-4 px-6 mb-1 text-xs">
+      <div className="flex justify-end space-x-4 px-5 mb-1 text-xs">
         <div className="flex items-center">
           <div className="h-2 w-2 rounded-full bg-blue-500 mr-1" />
           <span>오늘</span>
@@ -128,6 +128,6 @@ export default function MainCalendar({ groupedAppointments, refetch }: Props) {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }

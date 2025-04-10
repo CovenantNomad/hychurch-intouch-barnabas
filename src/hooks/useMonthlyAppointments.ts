@@ -25,7 +25,7 @@ export function useMonthlyAppointments() {
         dayjs(currentDate).month() + 1 // dayjs의 month는 0부터 시작
       ),
     staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   const userAppointments = useMemo(() => {

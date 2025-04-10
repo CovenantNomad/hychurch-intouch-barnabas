@@ -22,21 +22,23 @@ export default function Home() {
       : [];
 
   return (
-    <div className="relative min-h-svh">
+    <>
       <Header
         left={<AddSchedule />}
         center={<div>CALENDAR</div>}
         right={<MainDropdownMenu />}
       />
-      <MainCalendar
-        groupedAppointments={groupedAppointments}
-        refetch={refetch}
-      />
-      <AppointmentList
-        appointments={selectedAppointments}
-        isLoading={isLoading}
-        isFetching={isFetching}
-      />
-    </div>
+      <div className="relative flex-1 pt-6 pb-32 overflow-y-auto">
+        <MainCalendar
+          groupedAppointments={groupedAppointments}
+          refetch={refetch}
+        />
+        <AppointmentList
+          appointments={selectedAppointments}
+          isLoading={isLoading}
+          isFetching={isFetching}
+        />
+      </div>
+    </>
   );
 }
