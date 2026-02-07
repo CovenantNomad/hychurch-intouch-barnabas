@@ -103,9 +103,9 @@ export function SignUp({
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Sign Up</CardTitle>
+          <CardTitle className="text-2xl">회원가입</CardTitle>
           <CardDescription>
-            Fill in the fields below to create an account.
+            본인 이름을 선택하시고, 이메일과 비밀번호를 설정해주세요.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -221,15 +221,15 @@ export function SignUp({
 
               {/* 회원가입 버튼 */}
               <Button type="submit" className="w-full">
-                Sign Up
+                회원가입
               </Button>
             </form>
           </Form>
 
           <div className="mt-4 text-center text-sm">
-            Already have an account?{' '}
+            계정이 있으신가요?{' '}
             <Link href={'/login'}>
-              <span className="underline underline-offset-4">Login</span>
+              <span className="underline underline-offset-4">로그인</span>
             </Link>
           </div>
         </CardContent>

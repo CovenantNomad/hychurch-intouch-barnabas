@@ -73,10 +73,8 @@ export function SignIn({
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
+          <CardTitle className="text-2xl">로그인</CardTitle>
+          <CardDescription>이메일을 입력하여 로그인 하세요.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -122,15 +120,23 @@ export function SignIn({
 
               {/* 회원가입 버튼 */}
               <Button type="submit" className="w-full">
-                Login
+                로그인
               </Button>
             </form>
           </Form>
 
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
+          <div className="mt-6 text-center text-sm">
+            계정이 없으신가요?{' '}
             <Link href={'/signup'}>
-              <span className="underline underline-offset-4">SignUp</span>
+              <span className="underline underline-offset-4">회원가입</span>
+            </Link>
+          </div>
+          <div className="mt-2 text-center text-sm">
+            비밀번호를 잊어먹었다면 재설정하세요{' '}
+            <Link href={'/passwordResetEmail'}>
+              <span className="underline underline-offset-4">
+                비밀번호 재설정
+              </span>
             </Link>
           </div>
         </CardContent>
