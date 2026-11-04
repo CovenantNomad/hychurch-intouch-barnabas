@@ -45,28 +45,35 @@ const AddSchedule = () => {
           <PlusIcon />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[95vh] max-w-[96%] overflow-y-auto mx-auto px-4">
-        <DialogHeader>
+      <DialogContent
+        className="flex h-[100dvh] max-h-[100dvh] w-full max-w-full flex-col gap-0 overflow-hidden rounded-none border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:h-[90dvh] sm:max-h-[900px] sm:max-w-lg sm:rounded-xl sm:border"
+      >
+        <DialogHeader className="shrink-0 border-b px-6 pb-4 pt-[max(1.5rem,env(safe-area-inset-top))] sm:text-center">
           <DialogTitle>일정 등록</DialogTitle>
           <DialogDescription>멘티와의 만남을 등록해주세요</DialogDescription>
         </DialogHeader>
-        <div className="pb-0">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
           <CourseSelection setIsOpen={setIsOpen} />
-          <div className="mt-8 pl-4 py-3 border rounded-lg shadow-sm">
+          <div className="mt-6 rounded-lg border py-3 pl-4 shadow-sm">
             <WeekIndicator setIsOpen={setIsOpen} />
             {isOpen && <DateTimePicker setIsOpen={setIsOpen} />}
             <LocationInput setIsOpen={setIsOpen} />
           </div>
         </div>
-        <DialogFooter className="mt-4">
-          <div className="flex flex-col space-y-2">
+        <DialogFooter className="shrink-0 border-t bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <div className="flex w-full flex-col gap-2">
             <Button
+              className="h-12"
               onClick={onSubmitHandler}
               disabled={!isFormValid || isPending}
             >
               {isPending ? '저장 중...' : '등록'}
             </Button>
-            <Button variant="outline" onClick={() => setIsOpen(false)}>
+            <Button
+              className="h-11"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
               취소
             </Button>
           </div>

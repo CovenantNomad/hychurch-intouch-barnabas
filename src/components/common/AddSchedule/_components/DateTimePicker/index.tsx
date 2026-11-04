@@ -24,12 +24,10 @@ const DateTimePicker = ({ setIsOpen }: Props) => {
   const handleDateSelect = (date: Date | undefined) => {
     if (!date) return;
     setDate(dayjs(date).format('YYYY-MM-DD'));
-    setIsDateOpen(false);
   };
 
   const handleMinuteSelect = (index: number) => {
     setMinute((index * 5).toString());
-    setIsTimeOpen(false);
   };
 
   return (
