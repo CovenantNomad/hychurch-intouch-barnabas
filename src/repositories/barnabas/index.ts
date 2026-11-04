@@ -14,6 +14,8 @@ import {
   doc,
   getDoc,
   getDocs,
+  getDocsFromServer,
+  runTransaction,
   query,
   setDoc,
   updateDoc,
@@ -115,44 +117,63 @@ export async function findProgressMentorships(barnabaId: string) {
   }
 }
 
+class DuplicateAppointmentError extends Error {
+  constructor() {
+    super('이미 동일한 주차에 약속이 있습니다. 기존 일정을 수정해주세요.');
+  }
+}
+
 export async function createAppointment(
   submitData: Omit<TAppointment, 'appointmentId'>
 ) {
   try {
-    // Firestore의 MEETINGSCHEDULES 컬렉션 참조
-    const barnabasRef = collection(
+    const { matchingId, week } = submitData;
+    if (!matchingId || !/^[1-9]\d*$/.test(week)) {
+      throw new Error('유효한 과정과 주차가 필요합니다.');
+    }
+    const appointmentsRef = collection(
       db,
       BARNABAS_COLLCTION.BARNABAS,
       BARNABAS_COLLCTION.DATA,
       BARNABAS_COLLCTION.MEETINGSCHEDULES
     );
 
-    const q = query(
-      barnabasRef,
-      where('matchingId', '==', submitData.matchingId),
-      where('week', '==', submitData.week)
+    // 슬롯 도입 이전 일정도 보존한다. 취소 일정은 신규 생성 대신 수정한다.
+    // 캐시만으로 판단하지 않도록 서버 조회가 성공해야 등록을 진행한다.
+    const existing = await getDocsFromServer(query(
+      appointmentsRef,
+      where('matchingId', '==', matchingId),
+      where('week', '==', week)
+    ));
+    if (!existing.empty) throw new DuplicateAppointmentError();
+
+    const slotRef = doc(
+      db,
+      BARNABAS_COLLCTION.BARNABAS,
+      BARNABAS_COLLCTION.DATA,
+      'AppointmentSlots',
+      encodeURIComponent(JSON.stringify([matchingId, week]))
     );
-
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-      // 중복 문서가 있는 경우 에러 발생
-      throw new Error('이미 동일한 주차에 약속이 잡혀있습니다.');
-    }
-
-    // 문서 ID 생성 (여기서는 Firestore가 자동 ID 생성)
-    const newDocRef = doc(barnabasRef);
-    const appointmentWithId: TAppointment = {
-      appointmentId: newDocRef.id,
+    // 트랜잭션 콜백이 재실행돼도 동일한 일정 ID를 사용한다.
+    const appointmentRef = doc(appointmentsRef);
+    const appointment: TAppointment = {
       ...submitData,
+      appointmentId: appointmentRef.id,
     };
 
-    // Firestore에 데이터 저장
-    await setDoc(newDocRef, appointmentWithId);
-
-    // 저장된 문서 반환
-    return appointmentWithId;
+    return await runTransaction(db, async (transaction) => {
+      const slot = await transaction.get(slotRef);
+      if (slot.exists()) throw new DuplicateAppointmentError();
+      transaction.set(appointmentRef, appointment);
+      transaction.set(slotRef, {
+        matchingId,
+        week,
+        appointmentId: appointmentRef.id,
+      });
+      return appointment;
+    });
   } catch (error) {
+    if (error instanceof DuplicateAppointmentError) throw error;
     console.error('약속 생성 에러:', error);
     throw new Error('약속 생성에 실패했습니다. 다시 시도해주세요.');
   }

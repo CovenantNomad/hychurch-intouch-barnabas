@@ -25,7 +25,7 @@ import { AppointmentStatus, TAppointment } from '@/types/barnabas.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { CalendarIcon, Clock4Icon } from 'lucide-react';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 type Props = {
   appointment: TAppointment;
@@ -41,8 +41,6 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
   const [isTimeOpen, setIsTimeOpen] = useState(false);
   const [updatedAppointment, setUpdatedAppointment] =
     useState<TAppointment>(appointment);
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   // 상태 변경 핸들러
   const handleStatusChange = (status: AppointmentStatus) => {
@@ -56,7 +54,6 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
         ...prev,
         date: dayjs(date).format('YYYY-MM-DD'),
       }));
-      setIsDateOpen(false);
     }
   };
 
@@ -142,49 +139,19 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
     });
   };
 
-  // ✅ 키보드 감지 함수 (iOS & Android 대응)
-  useEffect(() => {
-    const handleFocus = () => setIsKeyboardOpen(true);
-    const handleBlur = () => setIsKeyboardOpen(false);
-
-    // 모바일 환경에서 키보드가 올라오면 감지
-    const textArea = document.getElementById('review-textarea');
-    if (textArea) {
-      textArea.addEventListener('focus', handleFocus);
-      textArea.addEventListener('blur', handleBlur);
-    }
-
-    return () => {
-      if (textArea) {
-        textArea.removeEventListener('focus', handleFocus);
-        textArea.removeEventListener('blur', handleBlur);
-      }
-    };
-  }, []);
-
-  // ✅ 키보드가 열리면 Dialog가 위로 올라가도록 처리
-  useEffect(() => {
-    if (isKeyboardOpen && dialogRef.current) {
-      dialogRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [isKeyboardOpen]);
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{triggerComponent}</DialogTrigger>
       <DialogContent
-        ref={dialogRef}
-        className={`max-w-[382px] md:max-w-[425px] transition-all ${
-          isKeyboardOpen ? 'mt-[-20vh]' : ''
-        }`}
+        className="flex h-[100dvh] max-h-[100dvh] w-full max-w-full flex-col gap-0 overflow-hidden rounded-none border-0 p-0 data-[state=open]:animate-none data-[state=closed]:animate-none sm:h-[90dvh] sm:max-h-[900px] sm:max-w-lg sm:rounded-xl sm:border"
       >
-        <DialogHeader>
+        <DialogHeader className="shrink-0 border-b px-6 pb-4 pt-[max(1.5rem,env(safe-area-inset-top))] sm:text-center">
           <DialogTitle>일정관리</DialogTitle>
           <DialogDescription>
             바나바 만남에 대한 상태와 일정변경을 여기서 진행해주세요.
           </DialogDescription>
         </DialogHeader>
-        <div>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
           {appointment.status !== AppointmentStatus.COMPLETED && (
             <>
               <div>
@@ -338,17 +305,19 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
                       </div>
                     </div>
                     <div className="flex justify-center">
-                      {isDateOpen && (
+                      {isDateOpen && updatedAppointment.status === AppointmentStatus.SCHEDULED && (
                         <div className="mt-2">
                           <Calendar
                             mode="single"
+                            required
+                            defaultMonth={dayjs(updatedAppointment.date).toDate()}
                             selected={dayjs(updatedAppointment.date).toDate()}
                             onSelect={handleDateSelect}
                             initialFocus
                           />
                         </div>
                       )}
-                      {isTimeOpen && (
+                      {isTimeOpen && updatedAppointment.status === AppointmentStatus.SCHEDULED && (
                         <div className="flex p-3 space-x-4 mt-2">
                           <ScrollArea className="h-[261px] w-32 rounded-md border">
                             <div className="p-4">
@@ -420,15 +389,16 @@ const UpdateAppointment = ({ appointment, triggerComponent }: Props) => {
                     />
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-2 whitespace-pre">
+                <p className="text-xs text-gray-500 mt-2 whitespace-pre-line">
                   {`만남후기는 완료상태로 저장 후 완료된 약속에서 작성해주세요\n캘린더에서 업데이트가 안되면, '일정 동기화'를 눌러주세요.`}
                 </p>
               </div>
             </>
           )}
         </div>
-        <DialogFooter className="mt-2">
+        <DialogFooter className="shrink-0 border-t bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           <Button
+            className="h-12 w-full"
             type="submit"
             onClick={onSavehandler}
             disabled={mutation.isPending}
