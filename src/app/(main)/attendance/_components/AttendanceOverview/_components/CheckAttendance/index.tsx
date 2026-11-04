@@ -52,7 +52,7 @@ const CheckAttendance = ({ sunday, course }: Props) => {
       toast({
         title: '✅ 출석체크 성공',
         description: `${dayjs(data.date).format(
-          'YYYY. MM. DD.'
+          'YYYY. MM. DD.',
         )} 출석체크가 제출되었습니다.`,
       });
       queryClient.invalidateQueries({
@@ -77,6 +77,14 @@ const CheckAttendance = ({ sunday, course }: Props) => {
         title: '❗️오류',
         description:
           '잘못된 접근입니다. 진행과정에서 바나바 과정을 선택해주세요.',
+        variant: 'destructive',
+      });
+    }
+
+    if (!attendanceService) {
+      return toast({
+        title: '❗️예배를 선택해주세요',
+        description: '출석할 예배를 먼저 선택한 뒤 제출해주세요.',
         variant: 'destructive',
       });
     }
