@@ -7,8 +7,8 @@ import { useMatchingStore } from '@/stores/matchingState';
 import { TMatchingStatus } from '@/types/barnabas.types';
 import { useQuery } from '@tanstack/react-query';
 import { LinkIcon, RotateCcwIcon } from 'lucide-react';
-import BarnabaProfileCard from './_components/BarnabaProfileCard';
-import MenteeProfileCard from './_components/MenteeProfileCard';
+import BarnabaProfileCard from '@/app/(main)/barnabas/[id]/_components/CourseInfomation/_components/BarnabaProfileCard';
+import MenteeProfileCard from '@/app/(main)/barnabas/[id]/_components/CourseInfomation/_components/MenteeProfileCard';
 
 const CourseInfomation = () => {
   const selectedMatching = useMatchingStore((state) => state.selectedMatching);

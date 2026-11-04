@@ -6,7 +6,7 @@ import { findProgressMentorships } from '@/repositories/barnabas';
 import { useAuthStore } from '@/stores/authState';
 import { useQuery } from '@tanstack/react-query';
 import { MessageSquareXIcon, RotateCcwIcon } from 'lucide-react';
-import AttendanceListitem from './_components/AttendanceListitem';
+import AttendanceListitem from '@/app/(main)/attendance/_components/AttendanceOverview/_components/AttendanceListitem';
 
 const AttendanceOverview = () => {
   const { profile } = useAuthStore();

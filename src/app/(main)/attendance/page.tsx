@@ -3,7 +3,7 @@
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
 import { MainDropdownMenu } from '@/components/common/Header/_components/MainDropdownMenu';
-import AttendanceOverview from './_components/AttendanceOverview';
+import AttendanceOverview from '@/app/(main)/attendance/_components/AttendanceOverview';
 
 const AttendancePage = () => {
   return (

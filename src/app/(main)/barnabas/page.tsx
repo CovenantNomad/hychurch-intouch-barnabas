@@ -3,7 +3,7 @@
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
 import { MainDropdownMenu } from '@/components/common/Header/_components/MainDropdownMenu';
-import BarnabasOverviews from './_components/BarnabasOverviews';
+import BarnabasOverviews from '@/app/(main)/barnabas/_components/BarnabasOverviews';
 
 const BarnabasPage = () => {
   return (

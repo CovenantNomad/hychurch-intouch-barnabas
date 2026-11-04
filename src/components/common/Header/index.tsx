@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
-import BackButton from './_components/BackButton';
+import BackButton from '@/components/common/Header/_components/BackButton';
 
 type Props = {
   left?: ReactNode;

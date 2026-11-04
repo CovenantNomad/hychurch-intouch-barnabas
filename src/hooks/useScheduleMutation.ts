@@ -1,6 +1,7 @@
 import { useToast } from '@/hooks/use-toast';
 import { createAppointment } from '@/repositories/barnabas';
 import { useAppointmentStore } from '@/stores/appointmentState';
+import { useDateStore } from '@/stores/dateStore';
 import { useScheduleStore } from '@/stores/scheduleState';
 import {
   AppointmentStatus,
@@ -9,12 +10,13 @@ import {
 } from '@/types/barnabas.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useRef } from 'react';
 
 export function useScheduleMutation(
   setIsOpen: Dispatch<SetStateAction<boolean>>
 ) {
   const queryClient = useQueryClient();
+  const submissionInFlight = useRef(false);
   const { toast } = useToast();
   const { appointments: userAppointments } = useAppointmentStore();
   const {
@@ -72,14 +74,32 @@ export function useScheduleMutation(
     setIsOpen(false);
   };
 
-  const handleSuccess = (data: TAppointment) => {
+  const handleSuccess = async (data: TAppointment) => {
+    const queryKey = [
+      'monthlyAppointments',
+      dayjs(data.date).format('YYYY-MM'),
+    ];
+
+    // 저장 전에 시작한 조회가 새 일정을 덮어쓰지 않도록 중단한다.
+    await queryClient.cancelQueries({ queryKey, exact: true });
+    queryClient.setQueryData<TAppointment[]>(queryKey, (appointments = []) => [
+      ...appointments.filter(
+        (appointment) => appointment.appointmentId !== data.appointmentId
+      ),
+      data,
+    ]);
+
+    useDateStore.getState().setSelectedDate(dayjs(data.date));
     showToast(
       '✅ 약속 생성 성공',
       `${dayjs(data.date).format('YYYY. MM. DD.')} 약속이 저장되었습니다`
     );
 
-    queryClient.invalidateQueries({
-      queryKey: ['monthlyAppointments', dayjs(date).format('YYYY-MM')],
+    // 처음 여는 달도 전체 목록을 재조회하되, 저장 결과는 즉시 표시한다.
+    void queryClient.invalidateQueries({
+      queryKey,
+      exact: true,
+      refetchType: 'all',
     });
 
     resetForm(); // ✅ 입력값 초기화 함수 호출
@@ -98,9 +118,15 @@ export function useScheduleMutation(
       createAppointment(data), // TAppointment 타입 데이터 전달
     onSuccess: handleSuccess,
     onError: handleError,
+    onSettled: () => {
+      submissionInFlight.current = false;
+    },
   });
 
   const onSubmitHandler = () => {
+    // React가 다시 렌더링되기 전의 연속 클릭도 차단한다.
+    if (submissionInFlight.current || mutation.isPending) return;
+
     if (!isFormValid)
       return showToast(
         '제출실패',
@@ -127,6 +153,7 @@ export function useScheduleMutation(
       matchingStatus: selectedCourse.status,
     };
 
+    submissionInFlight.current = true;
     mutation.mutate(submissionData);
   };
 
@@ -142,6 +169,7 @@ export function useScheduleMutation(
     selectedCourse,
     setSelectedCourse,
     isFormValid,
+    isPending: mutation.isPending,
     onSubmitHandler,
   };
 }

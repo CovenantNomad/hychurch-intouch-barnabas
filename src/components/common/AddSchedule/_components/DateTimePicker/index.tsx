@@ -15,14 +15,15 @@ type Props = {
 };
 
 const DateTimePicker = ({ setIsOpen }: Props) => {
-  const [isDateOpen, setIsDateOpen] = useState(false);
+  const [isDateOpen, setIsDateOpen] = useState(true);
   const [isTimeOpen, setIsTimeOpen] = useState(false);
   const { date, hour, minute, setDate, setHour, setMinute } =
     useScheduleMutation(setIsOpen);
 
   // 날짜 선택 핸들러
   const handleDateSelect = (date: Date | undefined) => {
-    setDate(date ? dayjs(date).format('YYYY-MM-DD') : undefined);
+    if (!date) return;
+    setDate(dayjs(date).format('YYYY-MM-DD'));
     setIsDateOpen(false);
   };
 
@@ -81,7 +82,9 @@ const DateTimePicker = ({ setIsOpen }: Props) => {
             <div className="mt-2">
               <Calendar
                 mode="single"
-                selected={date ? new Date(date) : undefined}
+                required
+                defaultMonth={date ? dayjs(date).toDate() : undefined}
+                selected={date ? dayjs(date).toDate() : undefined}
                 onSelect={handleDateSelect}
                 initialFocus
               />

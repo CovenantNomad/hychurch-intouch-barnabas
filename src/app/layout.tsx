@@ -1,7 +1,7 @@
 import { Toaster } from '@/components/ui/toaster';
 import type { Metadata, Viewport } from 'next';
-import '../styles/globals.css';
-import Providers from './providers';
+import '@/styles/globals.css';
+import Providers from '@/app/providers';
 
 export const viewport: Viewport = {
   width: 'device-width',

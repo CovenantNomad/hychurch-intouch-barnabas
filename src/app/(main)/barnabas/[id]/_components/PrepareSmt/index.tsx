@@ -7,7 +7,7 @@ import { useMatchingStore } from '@/stores/matchingState';
 import { useQuery } from '@tanstack/react-query';
 import { CircleOffIcon, MessageSquareXIcon, RotateCcwIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import ReportPopup from './_components/ReportPopup';
+import ReportPopup from '@/app/(main)/barnabas/[id]/_components/PrepareSmt/_components/ReportPopup';
 
 const PrepareSmt = () => {
   const [isMobile, setIsMobile] = useState(false);

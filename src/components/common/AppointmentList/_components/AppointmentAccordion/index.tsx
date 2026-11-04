@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/accordion';
 import { TAppointment } from '@/types/barnabas.types';
 import { useEffect, useState } from 'react';
-import AppointmentListItem from '../AppointmentListItem';
+import AppointmentListItem from '@/components/common/AppointmentList/_components/AppointmentListItem';
 
 type Props = {
   sortedAppointments: Record<string, TAppointment[]>;

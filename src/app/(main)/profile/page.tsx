@@ -3,9 +3,9 @@
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
 import { MainDropdownMenu } from '@/components/common/Header/_components/MainDropdownMenu';
-import BarnabasHeader from './_components/BarnabasHeader/BarnabasHeader';
-import BarnabasRecordsBox from './_components/BarnabasRecordsBox';
-import BarnabasYearlyRecords from './_components/BarnabasYearlyRecords';
+import BarnabasHeader from '@/app/(main)/profile/_components/BarnabasHeader/BarnabasHeader';
+import BarnabasRecordsBox from '@/app/(main)/profile/_components/BarnabasRecordsBox';
+import BarnabasYearlyRecords from '@/app/(main)/profile/_components/BarnabasYearlyRecords';
 
 const ProfilePage = () => {
   return (

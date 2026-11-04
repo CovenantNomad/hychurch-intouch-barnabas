@@ -19,7 +19,7 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { AppointmentStatus, TAppointment } from './../../types/barnabas.types';
+import { AppointmentStatus, TAppointment } from '@/types/barnabas.types';
 
 export const fetchBarnabaMembers = async (
   isActive: boolean
@@ -171,14 +171,17 @@ export async function fetchMonthlyAppointments(year: number, month: number) {
 
   const q = query(
     barnabasRef,
-    where('date', '>=', startDate.toISOString().split('T')[0]),
-    where('date', '<=', endDate.toISOString().split('T')[0])
+    where('date', '>=', dayjs(startDate).format('YYYY-MM-DD')),
+    where('date', '<=', dayjs(endDate).format('YYYY-MM-DD'))
   );
 
   const querySnapshot = await getDocs(q);
 
   const appointments: TAppointment[] = querySnapshot.docs.map(
-    (doc) => doc.data() as TAppointment
+    (doc) => ({
+      ...(doc.data() as TAppointment),
+      appointmentId: doc.id,
+    })
   );
 
   return appointments;
@@ -263,7 +266,10 @@ export async function getAppointmentById(
       return null;
     }
 
-    return docSnap.data() as TAppointment;
+    return {
+      ...(docSnap.data() as TAppointment),
+      appointmentId: docSnap.id,
+    };
   } catch (error) {
     console.error('🔥 getAppointmentById 실패:', error);
     throw new Error('약속 정보를 가져오는 중 오류가 발생했습니다.');
@@ -293,7 +299,10 @@ export async function getAppointmentDetails(
     }
 
     // 모든 문서 데이터를 배열로 변환하여 반환
-    return querySnapshot.docs.map((doc) => doc.data() as TAppointment);
+    return querySnapshot.docs.map((doc) => ({
+      ...(doc.data() as TAppointment),
+      appointmentId: doc.id,
+    }));
   } catch (error) {
     console.error('🔥 getAppointmentDetails 실패:', error);
     throw new Error('약속 세부 정보를 가져오는 중 오류가 발생했습니다.');

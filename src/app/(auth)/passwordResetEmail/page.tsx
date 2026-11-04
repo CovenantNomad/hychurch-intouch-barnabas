@@ -1,6 +1,6 @@
 'use client';
 
-import { ResetPassword } from './_components/ResetPassword';
+import { ResetPassword } from '@/app/(auth)/passwordResetEmail/_components/ResetPassword';
 
 const PasswordResetEmailPage = () => {
   return (

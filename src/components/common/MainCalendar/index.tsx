@@ -8,7 +8,7 @@ import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import dayjs, { Dayjs } from 'dayjs';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMemo } from 'react';
-import ViewButton from '../ViewButton';
+import ViewButton from '@/components/common/ViewButton';
 
 type Props = {
   groupedAppointments: TGroupedAppointments;
@@ -34,11 +34,11 @@ export default function MainCalendar({ groupedAppointments, refetch }: Props) {
 
   // 이전 달로 이동
   const handlePrevMonth = () =>
-    setCurrentDate((prev: Dayjs) => prev.subtract(1, 'month'));
+    setCurrentDate((prev: Dayjs) => prev.subtract(1, 'month').startOf('month'));
 
   // 다음 달로 이동
   const handleNextMonth = () =>
-    setCurrentDate((prev: Dayjs) => prev.add(1, 'month'));
+    setCurrentDate((prev: Dayjs) => prev.add(1, 'month').startOf('month'));
 
   return (
     <>
@@ -90,20 +90,21 @@ export default function MainCalendar({ groupedAppointments, refetch }: Props) {
 
       {/* 날짜 렌더링 */}
       <div className="grid grid-cols-7 text-center border-b">
-        {days.map((day, index) => {
+        {days.map((day) => {
           const dateKey = day.format('YYYY-MM-DD'); // 날짜 키 생성
           const appointmentCount = groupedAppointments[dateKey]?.length || 0; // 해당 날짜의 약속 수
 
           return (
             <div
-              key={index}
+              key={dateKey}
               onClick={() => setSelectedDate(day)}
               className={cn(
                 'h-[56px] flex flex-col justify-start items-center border-t pt-1 cursor-pointer',
                 day.isSame(currentDate, 'month')
                   ? 'text-black'
                   : 'text-gray-300',
-                day.day() === 0 && 'text-red-500'
+                day.isSame(currentDate, 'month') &&
+                  day.day() === 0 && 'text-red-500'
               )}
             >
               <span

@@ -3,7 +3,7 @@ import { groupAndSortDailyAppointments } from '@/lib/utils';
 import { useDateStore } from '@/stores/dateStore';
 import { TAppointment } from '@/types/barnabas.types';
 import dayjs from 'dayjs';
-import AppointmentAccordion from './_components/AppointmentAccordion';
+import AppointmentAccordion from '@/components/common/AppointmentList/_components/AppointmentAccordion';
 
 type Props = {
   appointments: TAppointment[];

@@ -8,8 +8,8 @@ import { TMatchingStatus } from '@/types/barnabas.types';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useQuery } from '@tanstack/react-query';
 import { MessageSquareXIcon, RotateCcwIcon } from 'lucide-react';
-import PendingCard from './_components/PendingCard';
-import ProgressCard from './_components/ProgressCard';
+import PendingCard from '@/app/(main)/barnabas/_components/BarnabasOverviews/_components/PendingCard';
+import ProgressCard from '@/app/(main)/barnabas/_components/BarnabasOverviews/_components/ProgressCard';
 
 const BarnabasOverviews = () => {
   const { profile } = useAuthStore();

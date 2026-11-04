@@ -29,6 +29,7 @@ export const useDateStore = create(
                 typeof update === 'function'
                   ? update(prev).format('YYYY-MM-DD') // 📌 변환 후 다시 'YYYY-MM-DD' 형식으로 저장
                   : update.format('YYYY-MM-DD');
+              state.selectedDate = state.currentDate;
             });
           },
 
@@ -36,13 +37,15 @@ export const useDateStore = create(
           setSelectedDate: (date: Dayjs | null) =>
             set((state) => {
               state.selectedDate = date ? date.format('YYYY-MM-DD') : null;
+              if (date) state.currentDate = date.format('YYYY-MM-DD');
             }),
 
           // ✅ 날짜 초기화
           resetDates: () =>
             set((state) => {
-              state.currentDate = today;
-              state.selectedDate = today;
+              const currentToday = dayjs().format('YYYY-MM-DD');
+              state.currentDate = currentToday;
+              state.selectedDate = currentToday;
             }),
         }))
       )

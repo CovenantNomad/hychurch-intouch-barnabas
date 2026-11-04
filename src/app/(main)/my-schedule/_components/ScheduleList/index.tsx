@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import dayjs, { Dayjs } from 'dayjs';
 import { ChevronLeft, ChevronRight, MessageSquareXIcon } from 'lucide-react';
 import { useMemo } from 'react';
-import MyAppointmentAccordion from './_components/MyAppointmentAccordion';
+import MyAppointmentAccordion from '@/app/(main)/my-schedule/_components/ScheduleList/_components/MyAppointmentAccordion';
 
 const ScheduleList = () => {
   const { profile } = useAuthStore();
@@ -34,11 +34,11 @@ const ScheduleList = () => {
 
   // 이전 달로 이동
   const handlePrevMonth = () =>
-    setCurrentDate((prev: Dayjs) => prev.subtract(1, 'month'));
+    setCurrentDate((prev: Dayjs) => prev.subtract(1, 'month').startOf('month'));
 
   // 다음 달로 이동
   const handleNextMonth = () =>
-    setCurrentDate((prev: Dayjs) => prev.add(1, 'month'));
+    setCurrentDate((prev: Dayjs) => prev.add(1, 'month').startOf('month'));
 
   const myAppointments = useMemo(() => {
     return allAppointments.filter((a) => a.barnabaId === profile?.id);

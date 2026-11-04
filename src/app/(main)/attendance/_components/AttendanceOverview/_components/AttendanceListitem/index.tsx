@@ -5,7 +5,7 @@ import { checkAttendanceSubmit } from '@/repositories/barnabas';
 import { TMatching } from '@/types/barnabas.types';
 import { useQuery } from '@tanstack/react-query';
 import { LoaderIcon } from 'lucide-react';
-import CheckAttendance from '../CheckAttendance';
+import CheckAttendance from '@/app/(main)/attendance/_components/AttendanceOverview/_components/CheckAttendance';
 
 type Props = {
   course: TMatching;
